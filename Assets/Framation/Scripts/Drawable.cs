@@ -21,6 +21,7 @@ namespace Framation
     {
 
         [SerializeField] GameObject prefab;
+        Camera cam;
         
         // PEN COLOUR
         public static Color Pen_Colour = Color.red;     // Change these to change the default drawing settings
@@ -194,7 +195,7 @@ namespace Framation
                 if (mouse_held_down && !no_drawing_on_current_drag)
                 {
                     // Convert mouse coordinates to world coordinates
-                    Vector2 mouse_world_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Vector2 mouse_world_position = cam.ScreenToWorldPoint(Input.mousePosition);
 
                     // Check if the current mouse position overlaps our image
                     Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
@@ -252,8 +253,8 @@ namespace Framation
 
                     //    BEGIN find contours from texture 
 
-                        float width  = 10 ;
-                        float height = 7.5f;
+                        float width  = 12.5f ;
+                        float height = 8.5f;
                         float center_x = width   / 2 ; 
                         float center_y = height  / 2 ;
 
@@ -458,6 +459,7 @@ namespace Framation
 
         void Awake()
         {
+            cam = Camera.main;
             drawable = this;
             // DEFAULT BRUSH SET HERE
             current_brush = PenBrush;

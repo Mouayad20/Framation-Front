@@ -298,9 +298,9 @@ public class PenTool : MonoBehaviour
         Vector3 mousePos = GetMousePosition();
         if (
             mousePos.x <=  0.1f  || 
-            mousePos.x >=  9.9f  || 
+            mousePos.x >=  12.4f || 
             mousePos.y >= -0.1f  || 
-            mousePos.y <= -7.4 
+            mousePos.y <= -8.4 
         ){ 
             dot.transform.position = dot.transform.position; 
         }else{
@@ -313,9 +313,9 @@ public class PenTool : MonoBehaviour
         Vector3 mousePos = GetMousePosition();
         if (
             mousePos.x <=  0.1f  || 
-            mousePos.x >=  9.9f  || 
+            mousePos.x >=  12.4f || 
             mousePos.y >= -0.1f  || 
-            mousePos.y <= -7.4 
+            mousePos.y <= -8.4 
         ){ 
             dot.transform.position = dot.transform.position; 
         }else{
