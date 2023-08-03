@@ -8,8 +8,8 @@ public class SaveNumFrame : MonoBehaviour
 {
 
     [SerializeField] TMP_InputField input;
-
     [SerializeField] Text testview;
+    
     public void SaveData()
     {
         string data = input.text;

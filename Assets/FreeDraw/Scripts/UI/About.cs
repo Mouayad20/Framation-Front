@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Board4 : View
+public class About : View
 {
     // [SerializeField] private Button _backButton;
     // public override void Initialize()

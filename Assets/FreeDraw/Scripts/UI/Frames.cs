@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Board6 : View
+public class Frames : View
 {
   
     [SerializeField] private Button _GoToHomeButton;
@@ -14,7 +14,7 @@ public class Board6 : View
     {
         _GoToHomeButton.onClick.AddListener(()=>{
              Audio_Manager.Instance.PlaySound("GoToBack");
-             ViewManager.Show<Board5>();
+            //  ViewManager.Show<Board5>();
         });
 
         _SaveVideoButton.onClick.AddListener(()=>{

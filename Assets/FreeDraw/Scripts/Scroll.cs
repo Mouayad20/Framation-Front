@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ssccrrooll : MonoBehaviour
+public class Scroll : MonoBehaviour
 
 {
     [SerializeField] Transform scroll;

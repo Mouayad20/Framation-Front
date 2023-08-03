@@ -10,7 +10,7 @@
 //         IEnumerator playGame(){
 
 //         yield return new WaitForSeconds(7);
-//         ViewManager.AddListener(()=> ViewManager.Show<Board0>());
+//         ViewManager.AddListener(()=> ViewManager.Show<Home>());
 
 
 //          }
