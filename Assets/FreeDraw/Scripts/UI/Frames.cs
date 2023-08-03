@@ -14,7 +14,7 @@ public class Frames : View
     {
         _GoToHomeButton.onClick.AddListener(()=>{
              Audio_Manager.Instance.PlaySound("GoToBack");
-            //  ViewManager.Show<Board5>();
+             ViewManager.Show<Drawing>();
         });
 
         _SaveVideoButton.onClick.AddListener(()=>{
