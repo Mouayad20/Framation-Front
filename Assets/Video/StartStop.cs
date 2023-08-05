@@ -25,13 +25,13 @@ public class StartStop : MonoBehaviour
     {
         if(player.isPlaying == false)
         {
-            print("isPlaying, isPlaying,isPlaying,isPlaying");
+            // print("isPlaying, isPlaying,isPlaying,isPlaying");
             player.Play();
             button.image.sprite = stopSprite;
         }
         else {
             player.Pause();
-            print("Pause, Pause,Pause,Pause");
+            // print("Pause, Pause,Pause,Pause");
             button.image.sprite = startSprite;
 
         }

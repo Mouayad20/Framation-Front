@@ -150,8 +150,8 @@ namespace Framation
         void Update()
         {
 
-            if(Input.GetKeyDown(KeyCode.G)){
-                print("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+            if(Drawing.drawSkeltonMode){
+                // print("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
                 isDrawing = !isDrawing;
 
                 // BEGIN Set the texture on texture_material
@@ -173,20 +173,19 @@ namespace Framation
                 // End Set the texture on texture_material
                 
                 ConvertSpriteToImage();
+                Drawing.drawSkeltonMode = false;
             }
 
-            if(Input.GetKeyDown(KeyCode.P)){
-                print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+            if(PenTool.doLinking){
+                // print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
                 link = new Link();
 				output = link.Linking();
-            }
-
-            if(Input.GetKeyDown(KeyCode.T)){
-                print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+                // print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
                 DrawTriangulation = !DrawTriangulation;
                 ResetCanvas();
+                PenTool.doLinking = false;
             }
-            
+  
             if(isDrawing){
                    
                 // Is the user holding down the left mouse button?

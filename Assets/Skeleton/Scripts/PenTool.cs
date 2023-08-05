@@ -27,10 +27,10 @@ public class PenTool : MonoBehaviour
     public  static List<UpdateAll> newVertices;
     public  static List<Skeleton> skeletons;
     private Skeleton basicSkeleton;
-    private Skeleton copySkeleton;
+    private Skeleton copySkeleton ;
     private DotController prevDot ;
-    private DotController maxDot ;
-    private DotController dot ;
+    private DotController maxDot  ;
+    private DotController dot     ;
     private Color color;
     private float k = 0.0f ; 
     private float prevX ;
@@ -40,11 +40,12 @@ public class PenTool : MonoBehaviour
     private bool  selectDot = false;
     private bool  moveSkeleton2 ;
     private bool  move ;
+    public static bool  doLinking ;
     private int   lineCounter ;
     private int   counter;
     private int   dotId;
 
-    private void Start(){
+    private void Start() {
         penCanvas.OnPenCanvasLeftClickEvent += AddDot;
         skeletons     = new List <Skeleton>();
         maxDot        = new DotController();
@@ -54,16 +55,18 @@ public class PenTool : MonoBehaviour
         lineCounter   = 0 ;
         dX = 0 ; 
         dY = 0 ; 
-        moveSkeleton2 = false;
+        moveSkeleton2 = true;
+        doLinking     = false;
         move    = false;
         penTool = this;
     }
 
-    private void Update(){
+    private void Update() {
         if(selectDot){
-            if(Input.GetKeyDown(KeyCode.D)){
+            if(Drawing.deleteDotMode){
                 RemoveDot(dot);
                 selectDot = false;
+                Drawing.deleteDotMode = false;
             }
         } 
         if(move){
@@ -144,8 +147,8 @@ public class PenTool : MonoBehaviour
         if(moveSkeleton2){
             maxDot.onDragMoveEvent += MoveMaxDot;
         }
-        if(Input.GetKeyDown(KeyCode.R)){
-            print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+        if(Drawing.controlMaxDotMode) {
+            // print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             moveSkeleton2 = !moveSkeleton2 ;
             if(moveSkeleton2 ==  false){
                 maxDot.GetComponent<Image>().color = color;
@@ -155,22 +158,26 @@ public class PenTool : MonoBehaviour
                 prevX = maxDot.transform.position.x;
                 prevY = maxDot.transform.position.y;
             }
+            Drawing.controlMaxDotMode = false;
         }
-        if(Input.GetKeyDown(KeyCode.M)){
-            print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+        if(Drawing.finishMode){
+            // print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
             move = !move;           
-            // for(int i = 0 ; i < copySkeleton.lines.Count ; i++){
-            //     copySkeleton.lines[i].lr.enabled = false;
-            //     copySkeleton.lines[i].start.GetComponent<Image>().enabled = false;
-            //     copySkeleton.lines[i].end.GetComponent<Image>().enabled = false;
-            // }
-        }
-        if(Input.GetKeyDown(KeyCode.F)){
-            print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
             skeletons.Add(copySkeleton);
+            for(int i = 0 ; i < copySkeleton.lines.Count ; i++){
+                copySkeleton.lines[i].lr.enabled = false;
+                copySkeleton.lines[i].start.GetComponent<Image>().enabled = false;
+                copySkeleton.lines[i].end.GetComponent<Image>().enabled = false;
+            }
+            Drawing.finishMode = false;
         }
-        if(Input.GetKeyDown(KeyCode.K)){
-            print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+        // if(Drawing){
+        //     print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        //     skeletons.Add(copySkeleton);
+            
+        // }
+        if(Drawing.drawSkelton2Mode){
+            // print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
             copySkeleton = new Skeleton();
             Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
             foreach(LineController line in basicSkeleton.lines){
@@ -238,6 +245,9 @@ public class PenTool : MonoBehaviour
             lineCounter = 0 ;
             prevDot = null;
             dot = null;
+            doLinking = true;
+            Drawing.drawSkelton2Mode  = false;
+            // Drawing.controlMaxDotMode = true;
         }
     }
 
@@ -348,7 +358,7 @@ public class PenTool : MonoBehaviour
         selectDot = false;
     }
 
-    private void RemoveDot(DotController dotRemove){
+    private void RemoveDot(DotController dotRemove) {
         LineController line = CheckIfLeaf(dotRemove); 
         if ( line != null ){    
             print("it is a leaf");
@@ -365,7 +375,7 @@ public class PenTool : MonoBehaviour
         }
     }
 
-    private LineController CheckIfLeaf(DotController  dot){
+    private LineController CheckIfLeaf(DotController  dot) {
         int freq = 0 ; 
         LineController line = null ;
         foreach(LineController line2 in  basicSkeleton.lines) {
@@ -381,7 +391,7 @@ public class PenTool : MonoBehaviour
             return null;
     }
 
-    private Vector3 GetMousePosition(){
+    private Vector3 GetMousePosition() {
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         worldMousePosition.z = 0;
         return worldMousePosition;

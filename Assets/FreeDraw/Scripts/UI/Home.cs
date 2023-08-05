@@ -17,6 +17,8 @@ public class Home: View
     [SerializeField] private GameObject _showButton;
     [SerializeField] private GameObject _save;
     [SerializeField] private GameObject _text;
+    [SerializeField] private GameObject _ControlMaxDot ;
+    [SerializeField] private GameObject _DeleteDot ;
 
 
     public override void Initialize()
@@ -25,9 +27,10 @@ public class Home: View
             Audio_Manager.Instance.PlaySound("Draw");
             ViewManager.Show<Drawing>();
             _color_panel.SetActive(true);
+            _Drawskeleton.SetActive(true);
+            _DeleteDot.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
-            _Drawskeleton.SetActive(true);
             _DrawskeletonTwo.SetActive(false);
             _Finish.SetActive(false);
             _motionButton.SetActive(false);
@@ -36,6 +39,7 @@ public class Home: View
             _showButton.SetActive(false);
             _save.SetActive(false);
             _text.SetActive(false);
+            _ControlMaxDot.SetActive(false);
 
         });
         _secondButton.onClick.AddListener(()=>{

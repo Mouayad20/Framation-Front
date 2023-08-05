@@ -46,7 +46,7 @@ public class VideoPlayback : MonoBehaviour
    {
         if (videoplayer.isPlaying)
         {
-            print("pause pause pause");
+          //   print("pause pause pause");
             videoplayer.Pause();  // If the video is playing, pause it
         }
         else
