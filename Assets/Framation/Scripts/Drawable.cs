@@ -225,6 +225,37 @@ namespace Framation
                 }
                 mouse_was_previously_held_down = mouse_held_down;
             }
+
+            // if(Input.GetKeyDown(KeyCode.S)){
+            //     // StartCoroutine(TakeScreenshot("sc.jpg"));
+            //     // string imageFolderPath = "C:\\Users\\HP\\Downloads\\Compressed\\Framation Front\\Assets\\Resources\\sprites\\";
+            //     // string outputVideoPath = "C:\\Users\\HP\\Desktop\\video.mp4";
+
+            //     // string videoFileName = "output_video.mp4";
+            //     // int frameRate = 30;
+            //     // VideoWriter fourcc = new VideoWriter(
+            //     //     outputVideoPath,
+            //     //     FourCC.MP4V,
+            //     //     frameRate,
+            //     //     new OpenCvSharp.Size(imageWidth, imageHeight)
+            //     // );
+
+            //     // for(int i=0 ; i<36 ; i++) {
+            //     //     Mat image = Cv2.ImRead("C:\\Users\\HP\\Downloads\\Compressed\\Framation Front\\Assets\\Resources\\sprites\\frame"+i+".jpg");
+            //     //     fourcc.Write(image);
+            //     // }
+            //     // fourcc.Release();
+
+            //     // // Run FFmpeg command to create the video
+            //     // Process ffmpegProcess = new Process();
+            //     // ffmpegProcess.StartInfo.FileName = "ffmpeg";
+            //     // ffmpegProcess.StartInfo.Arguments = $"-framerate 30 -i {imageFolderPath}\\%d.jpg -c:v libx264 -r 30 -pix_fmt yuv420p {outputVideoPath}";
+            //     // ffmpegProcess.StartInfo.UseShellExecute = false;
+            //     // ffmpegProcess.StartInfo.RedirectStandardOutput = true;
+            //     // ffmpegProcess.Start();
+
+            //     // ffmpegProcess.WaitForExit();
+            // }
         }
 
         public void ConvertSpriteToImage()
@@ -265,12 +296,18 @@ namespace Framation
                         Cv2.CvtColor (image, grayMat, ColorConversionCodes.BGR2GRAY); 
 
                         Mat thresh = new Mat ();
-                        Cv2.Threshold (grayMat, thresh, 150, 255, ThresholdTypes.BinaryInv);
+                        Cv2.Threshold (grayMat, thresh, 250, 255, ThresholdTypes.BinaryInv);
 
                         // Extract Contours
                         Point[][] contours;
                         HierarchyIndex[] hierarchy;
                         Cv2.FindContours (thresh, out contours, out hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);
+                        
+                        // Cv2.DrawContours(image, contours, -1, Scalar.Red, 2);
+                        // // Display the result
+                        // Cv2.ImShow("Contours", image);
+                        // Cv2.WaitKey(0);
+                        // Cv2.DestroyAllWindows();
                         
                         for (int k = 0 ; k < contours[0].Length  ; k++){
                             points.Add(

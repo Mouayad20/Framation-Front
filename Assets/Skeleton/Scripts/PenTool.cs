@@ -6,6 +6,7 @@ using Framation;
 using OperationNamespace;
 using System;
 using System.IO;
+using System.Diagnostics;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public class PenTool : MonoBehaviour
@@ -44,8 +45,10 @@ public class PenTool : MonoBehaviour
     private int   lineCounter ;
     private int   counter;
     private int   dotId;
+    private int   frameNum;
+    private int   frameId;
 
-    private void Start() {
+    private void Start()  {
         penCanvas.OnPenCanvasLeftClickEvent += AddDot;
         skeletons     = new List <Skeleton>();
         maxDot        = new DotController();
@@ -57,8 +60,10 @@ public class PenTool : MonoBehaviour
         dY = 0 ; 
         moveSkeleton2 = true;
         doLinking     = false;
-        move    = false;
-        penTool = this;
+        move     = false;
+        penTool  = this;
+        frameNum = 15 ; 
+        frameId  = 0 ; 
     }
 
     private void Update() {
@@ -79,8 +84,19 @@ public class PenTool : MonoBehaviour
             Skeleton skeleton2 = skeletons[1]; 
             
             float distance = Vector3.Distance(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position);
+           
             
             if (!((distance >= 0.00) && (distance <= 0.01))){
+
+                // int f =( (int)distance / frameNum);
+                // print("f         : " + (int)f);
+                // print("distance  : " +  (int)distance );
+                // print("condition : " +  ((int)distance%f==0)) ;
+
+                //  if (((int)distance)%f==0){
+                //     StartCoroutine(TakeScreenshot("frame"+frameId+".jpg"));
+                //     frameId+=1;
+                // }
 
                 Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
                 
@@ -171,11 +187,6 @@ public class PenTool : MonoBehaviour
             }
             Drawing.finishMode = false;
         }
-        // if(Drawing){
-        //     print("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-        //     skeletons.Add(copySkeleton);
-            
-        // }
         if(Drawing.drawSkelton2Mode){
             // print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
             copySkeleton = new Skeleton();
@@ -397,29 +408,16 @@ public class PenTool : MonoBehaviour
         return worldMousePosition;
     }
     
+    private System.Collections.IEnumerator TakeScreenshot(string filename)
+    {
+        yield return new WaitForEndOfFrame();
+        Texture2D screenshotTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        screenshotTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        screenshotTexture.Apply();
+
+        byte[] screenshotBytes = screenshotTexture.EncodeToPNG();
+        System.IO.File.WriteAllBytes(filename, screenshotBytes);
+
+        // Debug.Log("Screenshot captured and saved as " + filename);
+    }
 }
-
-/*
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                string screenshotFilename = "screenshot.png";
-                StartCoroutine(TakeScreenshot(screenshotFilename));
-            }
-        }
-
-        private System.Collections.IEnumerator TakeScreenshot(string filename)
-        {
-            yield return new WaitForEndOfFrame();
-
-            Texture2D screenshotTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-            screenshotTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-            screenshotTexture.Apply();
-
-            byte[] screenshotBytes = screenshotTexture.EncodeToPNG();
-            System.IO.File.WriteAllBytes(filename, screenshotBytes);
-
-            Debug.Log("Screenshot captured and saved as " + filename);
-        }
-*/
