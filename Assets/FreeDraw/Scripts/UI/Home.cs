@@ -8,14 +8,11 @@ public class Home: View
     [SerializeField] private GameObject _color_panel;
     [SerializeField] private GameObject _video_panel;
     [SerializeField] private GameObject _video_panel_2;
-    [SerializeField] private GameObject _Drawskeleton;
-    [SerializeField] private GameObject _DrawskeletonTwo;
+    [SerializeField] private GameObject _DrawSkeleton;
+    [SerializeField] private GameObject _DrawSkeletonTwo;
     [SerializeField] private GameObject _Finish;
-    [SerializeField] private GameObject _motionButton;
-    [SerializeField] private GameObject _numberFrameButton;
     [SerializeField] private GameObject _drawAnotherViewButton;
     [SerializeField] private GameObject _showButton;
-    [SerializeField] private GameObject _save;
     [SerializeField] private GameObject _text;
     [SerializeField] private GameObject _ControlMaxDot ;
     [SerializeField] private GameObject _DeleteDot ;
@@ -27,19 +24,17 @@ public class Home: View
             Audio_Manager.Instance.PlaySound("Draw");
             ViewManager.Show<Drawing>();
             _color_panel.SetActive(true);
-            _Drawskeleton.SetActive(true);
+            _DrawSkeleton.SetActive(true);
             _DeleteDot.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
-            _DrawskeletonTwo.SetActive(false);
+            _DrawSkeletonTwo.SetActive(false);
             _Finish.SetActive(false);
-            _motionButton.SetActive(false);
-            _numberFrameButton.SetActive(false);
             _drawAnotherViewButton.SetActive(false);
             _showButton.SetActive(false);
-            _save.SetActive(false);
             _text.SetActive(false);
             _ControlMaxDot.SetActive(false);
+            Drawing.vanishMode = true;
 
         });
         _secondButton.onClick.AddListener(()=>{

@@ -1,17 +1,27 @@
-1 - drawing
-2 - triangulation
-3 - skeleton
-4 - انو ما يطلع برات الاطار وقت يعمل موف للدوت
-5 - link between skeleton and triangles
-6 - move
-7 - texturing
-8 - clean&clear
+01 - drawing
+02 - triangulation
+03 - skeleton
+04 - انو ما يطلع برات الاطار وقت يعمل موف للدوت
+05 - link between skeleton and triangles
+06 - move
+07 - texturing
+08 - clean&clear
+09 - linking with UI
+10 - انو ما نأظهرلو انو الرسمة طلعت لبرا 
 
-linking with UI
 
 framation
 export video
 report 
 presentation
 Defend
-two charcters in scene
+two characters in scene
+
+التقطيع
+الكبس ع صورة وتعديلا والرجوع وملاقاتا متعدلة
+رسم مشاهد أخرى
+تصوير الفيديوهات الارشادية
+عرض الفيديو النهائي
+رسائل التنبيه
+About button 
+التست

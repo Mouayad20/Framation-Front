@@ -24,9 +24,9 @@ namespace Framation
         Camera cam;
         
         // PEN COLOUR
-        public static Color Pen_Colour = Color.red;     // Change these to change the default drawing settings
+        public Color Pen_Colour = Color.black;     // Change these to change the default drawing settings
         // PEN WIDTH (actually, it's a radius, in pixels)
-        public static int Pen_Width = 7;
+        public static int Pen_Width = 5;
 
         public delegate void Brush_Function(Vector2 world_position);
         // This is the function called when a left click happens
@@ -43,7 +43,7 @@ namespace Framation
         // Used to reference THIS specific file without making all methods static
         public static Drawable drawable;
         // MUST HAVE READ/WRITE enabled set in the file editor of Unity
-        Sprite drawable_sprite;
+        public Sprite drawable_sprite;
         Texture2D drawable_texture;
 
         Vector2 previous_drag_position;
@@ -64,6 +64,7 @@ namespace Framation
             public bool moveMesh = false;
             public bool isDrawing = true ;
             public bool DrawTriangulation = false ;
+            public GameObject go ;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -151,7 +152,6 @@ namespace Framation
         {
 
             if(Drawing.drawSkeltonMode){
-                // print("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
                 isDrawing = !isDrawing;
 
                 // BEGIN Set the texture on texture_material
@@ -177,10 +177,8 @@ namespace Framation
             }
 
             if(PenTool.doLinking){
-                // print("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
                 link = new Link();
 				output = link.Linking();
-                // print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
                 DrawTriangulation = !DrawTriangulation;
                 ResetCanvas();
                 PenTool.doLinking = false;
@@ -226,37 +224,27 @@ namespace Framation
                 mouse_was_previously_held_down = mouse_held_down;
             }
 
-            // if(Input.GetKeyDown(KeyCode.S)){
-            //     // StartCoroutine(TakeScreenshot("sc.jpg"));
-            //     // string imageFolderPath = "C:\\Users\\HP\\Downloads\\Compressed\\Framation Front\\Assets\\Resources\\sprites\\";
-            //     // string outputVideoPath = "C:\\Users\\HP\\Desktop\\video.mp4";
+            if (Drawing.vanishMode){
+                points    = new List<Vector2>(); 
+                uv        = new List<Vector2> (); 
+                triangles = new List<Triangle>(); 
+                moveMesh  = false;
+                isDrawing = true ;
+                DrawTriangulation = false ;
+                Destroy(go);
+                go = Instantiate(prefab);
+                Drawing.vanishMode = false;
+            }
 
-            //     // string videoFileName = "output_video.mp4";
-            //     // int frameRate = 30;
-            //     // VideoWriter fourcc = new VideoWriter(
-            //     //     outputVideoPath,
-            //     //     FourCC.MP4V,
-            //     //     frameRate,
-            //     //     new OpenCvSharp.Size(imageWidth, imageHeight)
-            //     // );
-
-            //     // for(int i=0 ; i<36 ; i++) {
-            //     //     Mat image = Cv2.ImRead("C:\\Users\\HP\\Downloads\\Compressed\\Framation Front\\Assets\\Resources\\sprites\\frame"+i+".jpg");
-            //     //     fourcc.Write(image);
-            //     // }
-            //     // fourcc.Release();
-
-            //     // // Run FFmpeg command to create the video
-            //     // Process ffmpegProcess = new Process();
-            //     // ffmpegProcess.StartInfo.FileName = "ffmpeg";
-            //     // ffmpegProcess.StartInfo.Arguments = $"-framerate 30 -i {imageFolderPath}\\%d.jpg -c:v libx264 -r 30 -pix_fmt yuv420p {outputVideoPath}";
-            //     // ffmpegProcess.StartInfo.UseShellExecute = false;
-            //     // ffmpegProcess.StartInfo.RedirectStandardOutput = true;
-            //     // ffmpegProcess.Start();
-
-            //     // ffmpegProcess.WaitForExit();
-            // }
+            if (Input.GetKeyDown(KeyCode.A)){
+                go.SetActive(true);
+            }
+            if (Input.GetKeyDown(KeyCode.Q)){
+                ResetCanvas();
+            }
+            
         }
+
 
         public void ConvertSpriteToImage()
         {
@@ -283,8 +271,8 @@ namespace Framation
 
                     //    BEGIN find contours from texture 
 
-                        float width  = 12.5f ;
-                        float height = 8.5f;
+                        float width  = 13f ;
+                        float height = 9.25f;
                         float center_x = width   / 2 ; 
                         float center_y = height  / 2 ;
 
@@ -328,7 +316,7 @@ namespace Framation
                         if(vertices.Length < 3) 
                             return; // error
                         var triangulation = new Triangulation2D(polygon, 30); // #TriangulationAngel
-                        var go = Instantiate(prefab);
+                        go = Instantiate(prefab);
                         go.GetComponent<DemoMesh>().SetTriangulation(triangulation);
                         globalMesh = go.GetComponent<DemoMesh>().mesh;
                         
@@ -495,6 +483,7 @@ namespace Framation
 
         void Awake()
         {
+
             cam = Camera.main;
             drawable = this;
             // DEFAULT BRUSH SET HERE
@@ -512,8 +501,5 @@ namespace Framation
             if (Reset_Canvas_On_Play)
                 ResetCanvas();
         }
-
-        
     }
-
 }

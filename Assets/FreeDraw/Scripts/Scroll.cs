@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,18 +15,19 @@ public class Scroll : MonoBehaviour
         GameObject ButtonEditPhoto  = scroll.GetChild(0).gameObject;
         GameObject g;
 
-        for(int i=0 ; i<30 ; i++)
+        for(int i=0 ; i < Directory.GetFiles("images").Length ; i++)
         {
             g = Instantiate(ButtonEditPhoto, scroll);
             Text buttonText   = g.GetComponentInChildren<Text>();
             Image buttonImage = g.GetComponentInChildren<Image>();
             if (buttonText != null && buttonImage != null  )
             {
-                buttonText.text = "edit " + i;
-                Texture2D newImage = LoadImageFromDisk("Assets\\Resources\\sprites\\frame"+i+".jpg");
+                buttonText.text = "frame " + i;
+                Texture2D newImage = LoadImageFromDisk("images\\"+i+".png");
                 buttonImage.sprite = Sprite.Create(
                     newImage,
-                    new Rect(0, 0,
+                    new Rect(
+                        0, 0,
                         newImage.width,
                         newImage.height
                     ),
@@ -34,6 +36,8 @@ public class Scroll : MonoBehaviour
             }
             g.GetComponent<Button>().onClick.AddListener(()=> {
                 print(buttonText.text);
+                Drawing.moveToDrawingBoard = true;
+                ViewManager.Show<Drawing>();
             });
         }
         Destroy(ButtonEditPhoto);

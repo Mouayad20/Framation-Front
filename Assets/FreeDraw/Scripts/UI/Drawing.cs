@@ -2,128 +2,139 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Framation;
 
 
 public class Drawing : View
 {
-    [SerializeField] private Button _GoToHomeButton;
-    [SerializeField] private Button _FinishButton;
-    [SerializeField] private Button _DrawSkeletonButton;
-    [SerializeField] private Button _DrawSkeletonTwoButton ;
-    [SerializeField] private Button _ControlMaxDotButton ;
-    [SerializeField] private Button _DeleteDotButton ;
-    [SerializeField] private GameObject _color_panel;
-    [SerializeField] private GameObject _video_panel;
-    [SerializeField] private GameObject _video_panel_2;
-    [SerializeField] private GameObject _DrawSkeleton;
-    [SerializeField] private GameObject _DrawSkeletonTwo;
-    [SerializeField] private GameObject _Finish;
-    [SerializeField] private GameObject _motionButton;
-    [SerializeField] private GameObject _numberFrameButton;
-    [SerializeField] private GameObject _drawAnotherViewButton;
-    [SerializeField] private GameObject _showButton;
-    [SerializeField] private GameObject _save;
-    [SerializeField] private GameObject _text;
-    [SerializeField] private GameObject _ControlMaxDot ;
-    [SerializeField] private GameObject _DeleteDot ;
-
+    [SerializeField] public Button _GoToHomeButton;
+    [SerializeField] public Button _FinishButton;
+    [SerializeField] public Button _DrawSkeletonButton;
+    [SerializeField] public Button _DrawSkeletonTwoButton ;
+    [SerializeField] public Button _ControlMaxDotButton ;
+    [SerializeField] public Button _DeleteDotButton ;
+    [SerializeField] public Button _BackToFramesUIButton ;
+    [SerializeField] public GameObject _color_panel;
+    [SerializeField] public GameObject _video_panel;
+    [SerializeField] public GameObject _video_panel_2;
+    [SerializeField] public GameObject _DrawSkeleton;
+    [SerializeField] public GameObject _DrawSkeletonTwo;
+    [SerializeField] public GameObject _Finish;
+    [SerializeField] public GameObject _drawAnotherViewButton;
+    [SerializeField] public GameObject _showButton;
+    [SerializeField] public GameObject _text;
+    [SerializeField] public GameObject _ControlMaxDot ;
+    [SerializeField] public GameObject _DeleteDot ;
+    [SerializeField] public GameObject _BackToFramesUI ;
+    [SerializeField] public Transform  scroll;
 
     public static bool drawSkeltonMode; 
     public static bool drawSkelton2Mode; 
     public static bool deleteDotMode; 
     public static bool controlMaxDotMode; 
+    public static bool moveToDrawingBoard; 
     public static bool finishMode; 
+    public static bool vanishMode; 
 
+    private void Update() {
+        if(moveToDrawingBoard){
+            _BackToFramesUI.SetActive(true);
+            _color_panel.SetActive(true);
+            _DeleteDot.SetActive(false);
+            _video_panel.SetActive(false);
+            _video_panel_2.SetActive(false);
+            _DrawSkeleton.SetActive(false);
+            _DrawSkeletonTwo.SetActive(false);
+            _Finish.SetActive(false);
+            _drawAnotherViewButton.SetActive(false);
+            _showButton.SetActive(false);
+            _text.SetActive(false);
+            _ControlMaxDot.SetActive(false);
+            moveToDrawingBoard = false;
+        }
+    }
+    
     public override void Initialize()
     {
-        drawSkeltonMode  = false;
-        drawSkelton2Mode = false;
+        drawSkeltonMode    = false;
+        drawSkelton2Mode   = false;
+        moveToDrawingBoard = false;
+        vanishMode = false;
+        
 
         _GoToHomeButton.onClick.AddListener(()=>{
-             Audio_Manager.Instance.PlaySound("GoToBack");
-            //  ViewManager.ShowLast();
-             ViewManager.Show<Home>();
+            Audio_Manager.Instance.PlaySound("GoToBack");
+            ViewManager.Show<Home>();
         });
 
         _DrawSkeletonButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
-            _color_panel.SetActive(false);
+            _DeleteDot.SetActive(true);
             _video_panel.SetActive(true);
-            _video_panel_2.SetActive(false);
             _DrawSkeletonTwo.SetActive(true);
+            _color_panel.SetActive(false);
+            _video_panel_2.SetActive(false);
             _DrawSkeleton.SetActive(false);
             _ControlMaxDot.SetActive(false);
-            _DeleteDot.SetActive(true);
+            _BackToFramesUI.SetActive(false);
             drawSkeltonMode = true;
         });
 
         _DrawSkeletonTwoButton.onClick.AddListener(()=>{
              Audio_Manager.Instance.PlaySound("DrawAndFinish");
-             _color_panel.SetActive(false);
-             _video_panel.SetActive(false);
              _video_panel_2.SetActive(true);
              _Finish.SetActive(true);
-             _DrawSkeletonTwo.SetActive(false);
              _ControlMaxDot.SetActive(true);
+             _text.SetActive(true);
+             _color_panel.SetActive(false);
+             _video_panel.SetActive(false);
+             _DrawSkeletonTwo.SetActive(false);
+             _BackToFramesUI.SetActive(false);
              _DeleteDot.SetActive(false);
              drawSkelton2Mode = true;
         });
 
         _FinishButton.onClick.AddListener(()=> {
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
-            // _video_panel_2.SetActive(true);
-            _motionButton.SetActive(true);
-            _numberFrameButton.SetActive(true);
             _drawAnotherViewButton.SetActive(true);
             _showButton.SetActive(true);
-            _save.SetActive(true);
-            _text.SetActive(true);
             _color_panel.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
             _Finish.SetActive(false);
             _DrawSkeletonTwo.SetActive(false);
+            _BackToFramesUI.SetActive(false);
             _ControlMaxDot.SetActive(false);
             _DeleteDot.SetActive(false);
+            _text.SetActive(false);
             finishMode = true;
-        });
-        
-        _motionButton.GetComponent<Button>().onClick.AddListener(()=>{
-                    // كود قصة التحريك بدال حرف ال m
-                    // لتنعرض الحركة
-            Audio_Manager.Instance.PlaySound("About");
-                    // ViewManager.Show<Home>();
-        });
-
-        _numberFrameButton.GetComponent<Button>().onClick.AddListener(()=>{
-            Audio_Manager.Instance.PlaySound("About");
-                    // ViewManager.Show<Home>();
         });
 
         _drawAnotherViewButton.GetComponent<Button>().onClick.AddListener(()=>{
-                    // لازم يتم حفظ المشهد والتقسيم عفريمات وبعدين ينتقل عالواجهة الأولى تبع الرسم ليرسم مشهد تاني
             Audio_Manager.Instance.PlaySound("GoToBack");
-            // ViewManager.Show<Drawing>();
             _color_panel.SetActive(true);
+            _DrawSkeleton.SetActive(true);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
-            _DrawSkeleton.SetActive(true);
-            _DeleteDot.SetActive(true);
+            _DeleteDot.SetActive(false);
             _DrawSkeletonTwo.SetActive(false);
             _Finish.SetActive(false);
-            _motionButton.SetActive(false);
-            _numberFrameButton.SetActive(false);
             _drawAnotherViewButton.SetActive(false);
             _showButton.SetActive(false);
-            _save.SetActive(false);
+            _BackToFramesUI.SetActive(false);
             _text.SetActive(false);
-            _ControlMaxDot.SetActive(false);
-            
+            _ControlMaxDot.SetActive(false);       
+            vanishMode    = true;       
         });
 
         _ControlMaxDotButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
             controlMaxDotMode = true;
+        });
+
+        _BackToFramesUIButton.GetComponent<Button>().onClick.AddListener(()=>{
+            Audio_Manager.Instance.PlaySound("DrawAndFinish");
+            ViewManager.Show<Frames>();
         });
 
         _DeleteDotButton.GetComponent<Button>().onClick.AddListener(()=>{
@@ -132,15 +143,8 @@ public class Drawing : View
         });
 
         _showButton.GetComponent<Button>().onClick.AddListener(()=>{
-                    // لازم يتم حفظ المشهد والتقسيم عفريمات وبعدين ينتقل عالواجهة يلي رح تنعرض فيها الفريمات كلها
             Audio_Manager.Instance.PlaySound("GoToBack");
             ViewManager.Show<Frames>();
-            GameObject ButtonEditPhoto  = transform.GetChild (0).gameObject;
-            GameObject g;
-            for(int i=0 ; i<10 ; i++){
-                g = Instantiate (ButtonEditPhoto , transform);
-            }
-            Destroy(ButtonEditPhoto);
         });
     }
 }

@@ -1,12 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using Framation;
 using OperationNamespace;
+using OpenCvSharp;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public class PenTool : MonoBehaviour
@@ -33,7 +35,7 @@ public class PenTool : MonoBehaviour
     private DotController maxDot  ;
     private DotController dot     ;
     private Color color;
-    private float k = 0.0f ; 
+    private float k     ; 
     private float prevX ;
     private float prevY ;
     private float dX ;
@@ -41,12 +43,15 @@ public class PenTool : MonoBehaviour
     private bool  selectDot = false;
     private bool  moveSkeleton2 ;
     private bool  move ;
+    private bool  calculateF ;
     public static bool  doLinking ;
     private int   lineCounter ;
     private int   counter;
     private int   dotId;
-    private int   frameNum;
+    public static int frameNum;
     private int   frameId;
+    private int   fffff;
+    private List<Vector3> vectors;
 
     private void Start()  {
         penCanvas.OnPenCanvasLeftClickEvent += AddDot;
@@ -56,17 +61,22 @@ public class PenTool : MonoBehaviour
         counter       = 0 ;
         dotId         = 0 ;
         lineCounter   = 0 ;
+        k = 0.0f ;
         dX = 0 ; 
         dY = 0 ; 
         moveSkeleton2 = true;
         doLinking     = false;
         move     = false;
         penTool  = this;
-        frameNum = 15 ; 
+        frameNum = 20 ; 
         frameId  = 0 ; 
+        fffff    = 0 ; 
+        calculateF = true;
+        vectors = new List<Vector3>(); 
     }
 
     private void Update() {
+        
         if(selectDot){
             if(Drawing.deleteDotMode){
                 RemoveDot(dot);
@@ -75,7 +85,7 @@ public class PenTool : MonoBehaviour
             }
         } 
         if(move){
-            if(k >= 1.0f){
+            if ( k >= 1.0f ) {
                 k = 0.0f;
             }
             k = k + 0.0001f ;
@@ -83,23 +93,21 @@ public class PenTool : MonoBehaviour
             Skeleton skeleton1 = skeletons[0]; 
             Skeleton skeleton2 = skeletons[1]; 
             
-            float distance = Vector3.Distance(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position);
+            if(calculateF){
+                calculateF = false;
+                vectors = GenerateInBetweenVectors(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position,3);
+            }
            
+            float distance = Vector3.Distance(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position);
             
-            if (!((distance >= 0.00) && (distance <= 0.01))){
+            if ( !( ( distance >= 0.00 ) && ( distance <= 0.01 ) ) ){
 
-                // int f =( (int)distance / frameNum);
-                // print("f         : " + (int)f);
-                // print("distance  : " +  (int)distance );
-                // print("condition : " +  ((int)distance%f==0)) ;
-
-                //  if (((int)distance)%f==0){
-                //     StartCoroutine(TakeScreenshot("frame"+frameId+".jpg"));
-                //     frameId+=1;
-                // }
-
+                if (IsContains(skeleton1.lines[0].start.transform.position,vectors)) {
+                    StartCoroutine(TakeScreenshot(frameId + ".png"));
+                    frameId += 1;
+                }
+            
                 Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
-                
                 for(int i = 0 ; i< skeleton1.lines.Count ; i++) {
                     
                     if ( i == 0 ){
@@ -157,14 +165,12 @@ public class PenTool : MonoBehaviour
                         }
                     }
                 }
-
             }
         }
         if(moveSkeleton2){
             maxDot.onDragMoveEvent += MoveMaxDot;
         }
         if(Drawing.controlMaxDotMode) {
-            // print("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
             moveSkeleton2 = !moveSkeleton2 ;
             if(moveSkeleton2 ==  false){
                 maxDot.GetComponent<Image>().color = color;
@@ -177,7 +183,6 @@ public class PenTool : MonoBehaviour
             Drawing.controlMaxDotMode = false;
         }
         if(Drawing.finishMode){
-            // print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
             move = !move;           
             skeletons.Add(copySkeleton);
             for(int i = 0 ; i < copySkeleton.lines.Count ; i++){
@@ -188,7 +193,6 @@ public class PenTool : MonoBehaviour
             Drawing.finishMode = false;
         }
         if(Drawing.drawSkelton2Mode){
-            // print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
             copySkeleton = new Skeleton();
             Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
             foreach(LineController line in basicSkeleton.lines){
@@ -258,8 +262,64 @@ public class PenTool : MonoBehaviour
             dot = null;
             doLinking = true;
             Drawing.drawSkelton2Mode  = false;
-            // Drawing.controlMaxDotMode = true;
         }
+        if(Drawing.vanishMode){
+            Drawable.drawable.isDrawing = true;   
+            skeletons     = new List <Skeleton>();
+            maxDot        = new DotController();
+            basicSkeleton = new Skeleton();
+            counter       = 0 ;
+            dotId         = 0 ;
+            lineCounter   = 0 ;
+            k = 0.0f ;
+            dX = 0 ; 
+            dY = 0 ; 
+            moveSkeleton2 = true;
+            doLinking     = false;
+            move     = false;
+            penTool  = this;
+            frameNum = 20  ; 
+            fffff    = 0   ; 
+            calculateF = true;
+            vectors = new List<Vector3>();
+        }
+        
+    }
+
+
+    private bool IsContains(Vector3 vector,List<Vector3> vs){
+        bool isContains = false; 
+        foreach(Vector3 v in vs){
+            if(
+                (  (vector.x == v.x) ||
+                    (( vector.x >= ( v.x - 0.01 ) ) &&
+                     ( vector.x <= ( v.x + 0.01 ) ))
+                ) && 
+                (  (vector.y == v.y) ||
+                    ( vector.y >= ( v.y - 0.01 ) ) &&
+                    ( vector.y <= ( v.y + 0.01 ) )  
+                )
+            ){
+                isContains = true;
+            }
+        }
+        return isContains;
+    }
+
+    private List<Vector3> GenerateInBetweenVectors(Vector3 start, Vector3 end, int count)
+    {
+        List<Vector3> lerpValues = new List<Vector3>();
+
+        float step = 1f / (count + 1); // Calculate the step size between each lerp value
+
+        for (int i = 1; i <= count; i++)
+        {
+            float t = step * i;
+            Vector3 lerpValue = Vector3.Lerp(start, end, t);
+            lerpValues.Add(lerpValue);
+        }
+
+        return lerpValues;
     }
 
     private void AddDot() {
@@ -317,27 +377,16 @@ public class PenTool : MonoBehaviour
 
     private void MoveDot(DotController dot) {
         Vector3 mousePos = GetMousePosition();
-        if (
-            mousePos.x <=  0.1f  || 
-            mousePos.x >=  12.4f || 
-            mousePos.y >= -0.1f  || 
-            mousePos.y <= -8.4 
-        ){ 
+        if (isInside(mousePos)){ 
             dot.transform.position = dot.transform.position; 
         }else{
             dot.transform.position = mousePos; 
         }
-        
     }
 
     private void MoveMaxDot(DotController dot) {
         Vector3 mousePos = GetMousePosition();
-        if (
-            mousePos.x <=  0.1f  || 
-            mousePos.x >=  12.4f || 
-            mousePos.y >= -0.1f  || 
-            mousePos.y <= -8.4 
-        ){ 
+        if (isInside(mousePos)){ 
             dot.transform.position = dot.transform.position; 
         }else{
             dot.transform.position = mousePos; 
@@ -351,11 +400,23 @@ public class PenTool : MonoBehaviour
         for(int i = 0 ; i < copySkeleton.lines.Count ; i++){
             if ( i == 0 ){
                 copySkeleton.lines[i].start.transform.position = new Vector3(copySkeleton.lines[i].start.transform.position.x+ dX , copySkeleton.lines[i].start.transform.position.y + dY , 0 ); 
-                copySkeleton.lines[i].end.transform.position   = new Vector3(copySkeleton.lines[i].end.transform.position.x  + dX , copySkeleton.lines[i].end.transform.position.y   + dY , 0 );                   
+                copySkeleton.lines[i].end.transform.position   = new Vector3(copySkeleton.lines[i].end.transform.position.x  + dX , copySkeleton.lines[i].end.transform.position.y   + dY , 0 );  
             }else{
                 copySkeleton.lines[i].end.transform.position   = new Vector3(copySkeleton.lines[i].end.transform.position.x  + dX , copySkeleton.lines[i].end.transform.position.y   + dY , 0 );                   
             }
         }
+    }
+
+    private bool isInside(Vector3 pos){
+        if (
+            pos.x <=  0.1f  || 
+            pos.x >=  12.9f || 
+            pos.y >= -0.1f  || 
+            pos.y <= -9.15 
+        )
+            return true;
+        else 
+            return false;
     }
 
     private void SelectDot(DotController selectedDot) {
@@ -407,17 +468,30 @@ public class PenTool : MonoBehaviour
         worldMousePosition.z = 0;
         return worldMousePosition;
     }
-    
-    private System.Collections.IEnumerator TakeScreenshot(string filename)
-    {
+
+    private System.Collections.IEnumerator TakeScreenshot(string filename){
         yield return new WaitForEndOfFrame();
-        Texture2D screenshotTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-        screenshotTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+
+        Texture2D screenshotTexture = new Texture2D(
+            1505,1080,
+            TextureFormat.RGB24,
+            false
+        );
+
+
+        screenshotTexture.ReadPixels(
+            new UnityEngine.Rect(
+                0,0,
+                1505,1080
+            ),
+            0,0
+        );
+
         screenshotTexture.Apply();
 
-        byte[] screenshotBytes = screenshotTexture.EncodeToPNG();
-        System.IO.File.WriteAllBytes(filename, screenshotBytes);
+        Mat outputTexture = new Mat();
+        Cv2.Resize(OpenCvSharp.Unity.TextureToMat(screenshotTexture), outputTexture, new Size(1300, 925));
 
-        // Debug.Log("Screenshot captured and saved as " + filename);
+        System.IO.File.WriteAllBytes("images\\"+ filename, OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
     }
 }

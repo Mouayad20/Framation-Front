@@ -14,7 +14,7 @@ namespace Framation
         // Changing pen settings is easy as changing the static properties Drawable.Pen_Colour and Drawable.Pen_Width
         public void SetMarkerColour(Color new_color)
         {
-            Drawable.Pen_Colour = new_color;
+            Drawable.drawable.Pen_Colour = new_color;
         }
         // new_width is radius in pixels
         public void SetMarkerWidth(int new_width)
@@ -29,9 +29,10 @@ namespace Framation
         public void SetTransparency(float amount)
         {
             Transparency = amount;
-            Color c = Drawable.Pen_Colour;
+            Color c = Drawable.drawable.Pen_Colour;
             c.a = amount;
-            Drawable.Pen_Colour = c;
+            SetMarkerColour(c);
+            Drawable.drawable.SetPenBrush();
         }
 
 
