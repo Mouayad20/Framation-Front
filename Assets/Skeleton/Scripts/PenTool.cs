@@ -49,7 +49,7 @@ public class PenTool : MonoBehaviour
     private int   counter;
     private int   dotId;
     public static int frameNum;
-    private int   frameId;
+    public static int frameId;
     private int   fffff;
     private List<Vector3> vectors;
 

@@ -14,6 +14,7 @@ public class Drawing : View
     [SerializeField] public Button _ControlMaxDotButton ;
     [SerializeField] public Button _DeleteDotButton ;
     [SerializeField] public Button _BackToFramesUIButton ;
+    [SerializeField] public Button _ClearBoardButton ;
     [SerializeField] public GameObject _color_panel;
     [SerializeField] public GameObject _video_panel;
     [SerializeField] public GameObject _video_panel_2;
@@ -26,6 +27,7 @@ public class Drawing : View
     [SerializeField] public GameObject _ControlMaxDot ;
     [SerializeField] public GameObject _DeleteDot ;
     [SerializeField] public GameObject _BackToFramesUI ;
+    [SerializeField] public GameObject _ClearBoard ;
     [SerializeField] public Transform  scroll;
 
     public static bool drawSkeltonMode; 
@@ -35,11 +37,13 @@ public class Drawing : View
     public static bool moveToDrawingBoard; 
     public static bool finishMode; 
     public static bool vanishMode; 
+    public static bool loadFrames; 
 
     private void Update() {
         if(moveToDrawingBoard){
             _BackToFramesUI.SetActive(true);
             _color_panel.SetActive(true);
+            _ClearBoard.SetActive(true);
             _DeleteDot.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
@@ -59,8 +63,13 @@ public class Drawing : View
         drawSkeltonMode    = false;
         drawSkelton2Mode   = false;
         moveToDrawingBoard = false;
-        vanishMode = false;
+        vanishMode         = false;
+        loadFrames         = false;
         
+        _ClearBoardButton.onClick.AddListener(()=>{
+            Audio_Manager.Instance.PlaySound("GoToBack");
+            Drawable.drawable.ResetCanvas();
+        });
 
         _GoToHomeButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
@@ -73,6 +82,7 @@ public class Drawing : View
             _video_panel.SetActive(true);
             _DrawSkeletonTwo.SetActive(true);
             _color_panel.SetActive(false);
+            _ClearBoard.SetActive(false);
             _video_panel_2.SetActive(false);
             _DrawSkeleton.SetActive(false);
             _ControlMaxDot.SetActive(false);
@@ -87,6 +97,7 @@ public class Drawing : View
              _ControlMaxDot.SetActive(true);
              _text.SetActive(true);
              _color_panel.SetActive(false);
+             _ClearBoard.SetActive(false);
              _video_panel.SetActive(false);
              _DrawSkeletonTwo.SetActive(false);
              _BackToFramesUI.SetActive(false);
@@ -99,6 +110,7 @@ public class Drawing : View
             _drawAnotherViewButton.SetActive(true);
             _showButton.SetActive(true);
             _color_panel.SetActive(false);
+            _ClearBoard.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
             _Finish.SetActive(false);
@@ -113,6 +125,7 @@ public class Drawing : View
         _drawAnotherViewButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
             _color_panel.SetActive(true);
+            _ClearBoard.SetActive(true);
             _DrawSkeleton.SetActive(true);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
@@ -135,6 +148,7 @@ public class Drawing : View
         _BackToFramesUIButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
             ViewManager.Show<Frames>();
+            Drawable.drawable.go.SetActive(true);
         });
 
         _DeleteDotButton.GetComponent<Button>().onClick.AddListener(()=>{
@@ -145,6 +159,7 @@ public class Drawing : View
         _showButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
             ViewManager.Show<Frames>();
+            loadFrames = true;
         });
     }
 }

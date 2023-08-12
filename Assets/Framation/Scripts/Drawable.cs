@@ -65,6 +65,7 @@ namespace Framation
             public bool isDrawing = true ;
             public bool DrawTriangulation = false ;
             public GameObject go ;
+            public int counterIndex = 0 ;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -237,7 +238,13 @@ namespace Framation
             }
 
             if (Input.GetKeyDown(KeyCode.A)){
-                go.SetActive(true);
+                byte[] imageData = File.ReadAllBytes("3.png");
+
+                drawable_texture.LoadImage(imageData);
+                drawable_texture.Apply();
+                drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
+                drawable_texture = drawable_sprite.texture;
+                counterIndex = 1 ;
             }
             if (Input.GetKeyDown(KeyCode.Q)){
                 ResetCanvas();
@@ -291,19 +298,24 @@ namespace Framation
                         HierarchyIndex[] hierarchy;
                         Cv2.FindContours (thresh, out contours, out hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);
                         
-                        // Cv2.DrawContours(image, contours, -1, Scalar.Red, 2);
+                        // Cv2.DrawContours(image, contours, 0, Scalar.Red, 2);
+                        // Cv2.DrawContours(image, contours, 1, Scalar.Black, 2);
+                        // Cv2.DrawContours(image, contours, 2, Scalar.Yellow, 2);
                         // // Display the result
                         // Cv2.ImShow("Contours", image);
                         // Cv2.WaitKey(0);
                         // Cv2.DestroyAllWindows();
                         
-                        for (int k = 0 ; k < contours[0].Length  ; k++){
+                        for (int k = 0 ; k < contours[counterIndex].Length  ; k++){
                             points.Add(
                                 new Vector2(
-                                    ((  contours[0][k].X - center_x ) / 100 ) + 0.05f ,
-                                    (( -contours[0][k].Y - center_y ) / 100 ) + 0.05f 
+                                    ((  contours[counterIndex][k].X - center_x ) / 100 ) + 0.05f ,
+                                    (( -contours[counterIndex][k].Y - center_y ) / 100 ) + 0.05f 
                                     )
                                 );
+                        }
+                        if(counterIndex == 1){
+                            counterIndex = 0 ;
                         }
 
                     //    END  find contours from texture
@@ -478,6 +490,7 @@ namespace Framation
         public void ResetCanvas()
         {
             drawable_texture.SetPixels(clean_colours_array);
+            // drawable_texture = this.GetComponent<SpriteRenderer>().sprite.texture ;
             drawable_texture.Apply();
         }
 

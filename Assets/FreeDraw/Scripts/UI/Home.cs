@@ -1,5 +1,7 @@
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using System.IO;
+
 public class Home: View
 {
     [SerializeField] private Button _startButton;
@@ -16,6 +18,7 @@ public class Home: View
     [SerializeField] private GameObject _text;
     [SerializeField] private GameObject _ControlMaxDot ;
     [SerializeField] private GameObject _DeleteDot ;
+    [SerializeField] public GameObject _ClearBoard ;
 
 
     public override void Initialize()
@@ -24,6 +27,7 @@ public class Home: View
             Audio_Manager.Instance.PlaySound("Draw");
             ViewManager.Show<Drawing>();
             _color_panel.SetActive(true);
+            _ClearBoard.SetActive(true);
             _DrawSkeleton.SetActive(true);
             _DeleteDot.SetActive(false);
             _video_panel.SetActive(false);
@@ -35,22 +39,19 @@ public class Home: View
             _text.SetActive(false);
             _ControlMaxDot.SetActive(false);
             Drawing.vanishMode = true;
-
+            Directory.Delete("images", true);
+            Directory.CreateDirectory("images");
+            PenTool.frameId = 0 ;
         });
+
         _secondButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("Options");
             ViewManager.Show<Options>();
         });
+        
         _thirdButton.onClick.AddListener(()=> {
             Audio_Manager.Instance.PlaySound("About");
             ViewManager.Show<About>();
-        });
-
-         
+        }); 
     }
 }
-
-
-    
-
-
