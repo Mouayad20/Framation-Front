@@ -7,7 +7,7 @@ public class CreateVideoFromImages : MonoBehaviour
 
     void Start(){
         string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
-        string imagesDirectory = @"C:\Users\HP\Downloads\Compressed\Framation Front"; // Replace with the directory containing your images
+        string imagesDirectory = @"C:\Users\HP\Downloads\Compressed\Framation Front\images"; // Replace with the directory containing your images
         string outputVideoPath = @"C:\Users\HP\Downloads\Compressed\Framation Front\output.mp4"; // Replace with the desired output video path
 
         ProcessStartInfo startInfo = new ProcessStartInfo();

@@ -95,7 +95,7 @@ public class PenTool : MonoBehaviour
             
             if(calculateF){
                 calculateF = false;
-                vectors = GenerateInBetweenVectors(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position,3);
+                vectors = GenerateInBetweenVectors(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position,10);
             }
            
             float distance = Vector3.Distance(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position);

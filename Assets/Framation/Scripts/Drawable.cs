@@ -4,6 +4,7 @@ namespace Framation
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
     using System.IO;
+    using System.Diagnostics;
     using System.Collections;
     using System.Collections.Generic;
     using OpenCvSharp;
@@ -44,7 +45,7 @@ namespace Framation
         public static Drawable drawable;
         // MUST HAVE READ/WRITE enabled set in the file editor of Unity
         public Sprite drawable_sprite;
-        Texture2D drawable_texture;
+        public Texture2D drawable_texture;
 
         Vector2 previous_drag_position;
         Color[] clean_colours_array;
@@ -64,6 +65,7 @@ namespace Framation
             public bool moveMesh = false;
             public bool isDrawing = true ;
             public bool DrawTriangulation = false ;
+            public bool changeTexture = false ;
             public GameObject go ;
             public int counterIndex = 0 ;
 
@@ -237,19 +239,36 @@ namespace Framation
                 Drawing.vanishMode = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.A)){
-                byte[] imageData = File.ReadAllBytes("3.png");
+            if (changeTexture){
 
-                drawable_texture.LoadImage(imageData);
+                drawable_texture.LoadImage(Scroll.spriteToChange);
+                print("Drawable : " + Scroll.spritePath);
                 drawable_texture.Apply();
                 drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
                 drawable_texture = drawable_sprite.texture;
                 counterIndex = 1 ;
+                changeTexture    = false;
+
             }
+
             if (Input.GetKeyDown(KeyCode.Q)){
-                ResetCanvas();
+                string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
+                string imagesDirectory = @"C:\Users\HP\Downloads\Compressed\Framation Front\frames"; // Replace with the directory containing your images
+                string outputVideoPath = @"C:\Users\HP\Downloads\Compressed\Framation Front\output.mp4"; // Replace with the desired output video path
+
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = ffmpegPath;
+                startInfo.Arguments = $"-framerate 24 -i .\\images\\%d.png koko.mp4";
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                using (Process process = Process.Start(startInfo))
+                {
+                    process.WaitForExit();
+                }
+
+                print("Video created successfully!");
             }
-            
+
         }
 
 
@@ -371,9 +390,6 @@ namespace Framation
                     
                     points.Clear(); 
 
-                 
-
-
                 // Optionally, you can save the bytes to a file
                 // System.IO.File.WriteAllBytes("C:/Users/HP/Downloads/Compressed/trianglation/Assets/OpenCV+Unity/Demo/Identifiy_Contours_by_Shape/someshapes.jpg", bytes);
 
@@ -384,7 +400,7 @@ namespace Framation
             }
             else
             {
-                Debug.LogError("drawable_sprite is not assigned!");
+                print("drawable_sprite is not assigned!");
             }
         }
 
@@ -489,8 +505,7 @@ namespace Framation
         // Changes every pixel to be the reset colour
         public void ResetCanvas()
         {
-            drawable_texture.SetPixels(clean_colours_array);
-            // drawable_texture = this.GetComponent<SpriteRenderer>().sprite.texture ;
+            drawable_texture.LoadImage(File.ReadAllBytes("Assets\\FreeDraw\\Art\\Images\\whiteBoard.png"));
             drawable_texture.Apply();
         }
 

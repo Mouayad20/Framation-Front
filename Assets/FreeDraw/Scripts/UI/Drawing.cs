@@ -37,7 +37,6 @@ public class Drawing : View
     public static bool moveToDrawingBoard; 
     public static bool finishMode; 
     public static bool vanishMode; 
-    public static bool loadFrames; 
 
     private void Update() {
         if(moveToDrawingBoard){
@@ -64,7 +63,6 @@ public class Drawing : View
         drawSkelton2Mode   = false;
         moveToDrawingBoard = false;
         vanishMode         = false;
-        loadFrames         = false;
         
         _ClearBoardButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
@@ -147,8 +145,11 @@ public class Drawing : View
 
         _BackToFramesUIButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
-            ViewManager.Show<Frames>();
+            System.IO.File.WriteAllBytes(Scroll.spritePath, Drawable.drawable.drawable_texture.EncodeToPNG());
+            print("Frames : " + Scroll.spritePath);
             Drawable.drawable.go.SetActive(true);
+            Drawable.drawable.ResetCanvas();
+            ViewManager.Show<Frames>();
         });
 
         _DeleteDotButton.GetComponent<Button>().onClick.AddListener(()=>{
@@ -159,7 +160,6 @@ public class Drawing : View
         _showButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
             ViewManager.Show<Frames>();
-            loadFrames = true;
         });
     }
 }
