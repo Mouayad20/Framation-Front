@@ -31,7 +31,7 @@ public class PenTool : MonoBehaviour
     public  static List<Skeleton> skeletons;
     private Skeleton basicSkeleton;
     private Skeleton copySkeleton ;
-    private Skeleton copySkeleton2 ;
+    private Skeleton stableSkeleton ;
     private DotController prevDot ;
     private DotController maxDot  ;
     private DotController dot     ;
@@ -44,7 +44,7 @@ public class PenTool : MonoBehaviour
     private bool  selectDot = false;
     private bool  moveSkeleton2 ;
     private bool  move ;
-    private bool  calculateF ;
+    public  bool  doCopySkeleton1 ;
     public static bool  doLinking ;
     private int   lineCounter ;
     private int   counter;
@@ -56,23 +56,22 @@ public class PenTool : MonoBehaviour
 
     private void Start()  {
         penCanvas.OnPenCanvasLeftClickEvent += AddDot;
-        skeletons     = new List <Skeleton>();
-        maxDot        = new DotController();
-        basicSkeleton = new Skeleton();
-        counter       = 0 ;
-        dotId         = 0 ;
-        lineCounter   = 0 ;
-        k = 0.0f ;
+        skeletons       = new List <Skeleton>();
+        maxDot          = new DotController();
+        basicSkeleton   = new Skeleton();
+        counter         = 0 ;
+        dotId           = 0 ;
+        lineCounter     = 0 ;
+        moveSkeleton2   = true;
+        doCopySkeleton1 = true;
+        doLinking       = false;
+        k  = 0.0f ;
         dX = 0 ; 
         dY = 0 ; 
-        moveSkeleton2 = true;
-        doLinking     = false;
         move     = false;
         penTool  = this;
-        frameNum = 20 ; 
+        frameNum = 24 ; 
         frameId  = 0 ; 
-        fffff    = 0 ; 
-        calculateF = true;
         vectors = new List<Vector3>(); 
     }
 
@@ -90,24 +89,26 @@ public class PenTool : MonoBehaviour
             if ( k >= 1.0f ) {
                 move = false;
             }
-            k = k + (1.0f/(float)frameNum) ;
+
+            k = k + ( 1.0f / ( float ) frameNum ) ;
 
             Skeleton skeleton1 = skeletons[0]; 
             Skeleton skeleton2 = skeletons[1]; 
+            if (doCopySkeleton1){
+                doCopySkeleton1 = false;
+                stableSkeleton = new Skeleton();
+                stableSkeleton = CloneSkeleton(skeleton1,out maxDot,true);
+            }
             
             Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
+
             for(int i = 0 ; i< skeleton1.lines.Count ; i++) {
-                // print("__________________");
-                // print("start1 : " + skeleton1.lines[i].start.transform.position);
-                // print("end111 : " + skeleton1.lines[i].end.transform.position);
-                // print("start2 : " + copySkeleton2.lines[i].start.transform.position);
-                // print("end222 : " + copySkeleton2.lines[i].end.transform.position);
                 
                 if ( i == 0 ){
-                    skeleton1.lines[i].start.transform.position = Vector3.Lerp(skeleton1.lines[i].start.transform.position, skeleton2.lines[i].start.transform.position, k);
-                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);                    
+                    skeleton1.lines[i].start.transform.position = Vector3.Lerp(stableSkeleton.lines[i].start.transform.position, skeleton2.lines[i].start.transform.position, k);
+                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(stableSkeleton.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);                    
                 }else{
-                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);
+                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(stableSkeleton.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);
                 }
 
                 HashSet<UpdateAll> uniqueUpdateAll = new HashSet<UpdateAll>();
@@ -188,62 +189,9 @@ public class PenTool : MonoBehaviour
             Drawing.finishMode = false;
         }
         if(Drawing.drawSkelton2Mode){
+            
             copySkeleton = new Skeleton();
-            copySkeleton2 = new Skeleton();
-            Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
-            foreach(LineController line in basicSkeleton.lines){
-                if(!dotsDictionary.ContainsKey(line.start.id)){
-                    DotController dot = Instantiate(dotPrefab , line.start.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
-                    dot.id = line.start.id;
-                    dot.onDragEvent = line.start.onDragEvent;
-                    dot.OnRightClickEvent  = line.start.OnRightClickEvent;
-                    dot.OnLeftClickEvent   = line.start.OnLeftClickEvent;
-                    dotsDictionary[dot.id] = dot;
-                }
-                if(!dotsDictionary.ContainsKey(line.end.id)){
-                    DotController dot = Instantiate(dotPrefab , line.end.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
-                    dot.id = line.end.id;
-                    dot.onDragEvent = line.end.onDragEvent;
-                    dot.OnRightClickEvent  = line.end.OnRightClickEvent;
-                    dot.OnLeftClickEvent   = line.end.OnLeftClickEvent;
-                    dotsDictionary[dot.id] = dot;
-                }
-            }
-            maxDot = Instantiate(dotPrefab , new Vector3(0,-99999999999,0), Quaternion.identity, dotParent).GetComponent<DotController>();
-            foreach (LineController line in basicSkeleton.lines){
-                if ( ( line.start.transform.position.y >  maxDot.transform.position.y) || ( line.end.transform.position.y > maxDot.transform.position.y ) ) {
-                    if(line.start.transform.position.y >= line.end.transform.position.y){
-                        maxDot = dotsDictionary[line.start.id];
-                    }else{
-                        maxDot = dotsDictionary[line.end.id];
-                    }
-                }
-                line.lr.enabled = false;
-                line.start.GetComponent<Image>().enabled = false;
-                line.end.GetComponent<Image>().enabled = false;
-
-                LineController cloneLine = line.Clone(); 
-                cloneLine = Instantiate (lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<LineController>(); ; 
-                cloneLine.id = line.id  ;  
-
-                cloneLine.start    = dotsDictionary[line.start.id];
-                cloneLine.start.id = dotsDictionary[line.start.id].id;
-                cloneLine.start.onDragEvent = dotsDictionary[line.start.id].onDragEvent;
-                cloneLine.start.OnRightClickEvent = dotsDictionary[line.start.id].OnRightClickEvent;
-                cloneLine.start.OnLeftClickEvent  = dotsDictionary[line.start.id].OnLeftClickEvent;
-
-                cloneLine.end    = dotsDictionary[line.end.id];
-                cloneLine.end.id = dotsDictionary[line.end.id].id;
-                cloneLine.end.onDragEvent =  dotsDictionary[line.end.id].onDragEvent;
-                cloneLine.end.OnRightClickEvent =  dotsDictionary[line.end.id].OnRightClickEvent;
-                cloneLine.end.OnLeftClickEvent  =  dotsDictionary[line.end.id].OnLeftClickEvent;
-
-                cloneLine.SetStart(cloneLine.start , cloneLine.start.id) ;
-                cloneLine.SetEnd(  cloneLine.end   , cloneLine.end.id  ) ;
-                
-                copySkeleton.lines.Add(cloneLine);   
-                // copySkeleton2.lines.Add(cloneLine);   
-            }
+            copySkeleton = CloneSkeleton(basicSkeleton,out maxDot,false);
 
             skeletons.Add(basicSkeleton);
 
@@ -275,12 +223,74 @@ public class PenTool : MonoBehaviour
             doLinking     = false;
             move     = false;
             penTool  = this;
-            // frameNum = 20  ; 
-            fffff    = 0   ; 
-            calculateF = true;
             vectors = new List<Vector3>();
         }
         
+    }
+
+
+    private Skeleton CloneSkeleton(Skeleton skeleton, out DotController maxDot, bool hideSkeleton){
+        Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
+        Skeleton copySkeleton = new Skeleton();
+        maxDot = Instantiate(dotPrefab , new Vector3(0,-99999999999,0), Quaternion.identity, dotParent).GetComponent<DotController>();
+        foreach(LineController line in skeleton.lines){
+            if(!dotsDictionary.ContainsKey(line.start.id)){
+                DotController dot = Instantiate(dotPrefab , line.start.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
+                dot.id = line.start.id;
+                dot.onDragEvent = line.start.onDragEvent;
+                dot.OnRightClickEvent  = line.start.OnRightClickEvent;
+                dot.OnLeftClickEvent   = line.start.OnLeftClickEvent;
+                dotsDictionary[dot.id] = dot;
+            }
+            if(!dotsDictionary.ContainsKey(line.end.id)){
+                DotController dot = Instantiate(dotPrefab , line.end.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
+                dot.id = line.end.id;
+                dot.onDragEvent = line.end.onDragEvent;
+                dot.OnRightClickEvent  = line.end.OnRightClickEvent;
+                dot.OnLeftClickEvent   = line.end.OnLeftClickEvent;
+                dotsDictionary[dot.id] = dot;
+            }
+        }
+        foreach (LineController line in basicSkeleton.lines){
+            if ( ( line.start.transform.position.y >  maxDot.transform.position.y) || ( line.end.transform.position.y > maxDot.transform.position.y ) ) {
+                if(line.start.transform.position.y >= line.end.transform.position.y){
+                    maxDot = dotsDictionary[line.start.id];
+                }else{
+                    maxDot = dotsDictionary[line.end.id];
+                }
+            }
+            line.lr.enabled = false;
+            line.start.GetComponent<Image>().enabled = false;
+            line.end.GetComponent<Image>().enabled = false;
+
+            LineController cloneLine = line.Clone(); 
+            cloneLine = Instantiate (lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<LineController>(); ; 
+            cloneLine.id = line.id  ;  
+
+            cloneLine.start    = dotsDictionary[line.start.id];
+            cloneLine.start.id = dotsDictionary[line.start.id].id;
+            cloneLine.start.onDragEvent = dotsDictionary[line.start.id].onDragEvent;
+            cloneLine.start.OnRightClickEvent = dotsDictionary[line.start.id].OnRightClickEvent;
+            cloneLine.start.OnLeftClickEvent  = dotsDictionary[line.start.id].OnLeftClickEvent;
+
+            cloneLine.end    = dotsDictionary[line.end.id];
+            cloneLine.end.id = dotsDictionary[line.end.id].id;
+            cloneLine.end.onDragEvent =  dotsDictionary[line.end.id].onDragEvent;
+            cloneLine.end.OnRightClickEvent =  dotsDictionary[line.end.id].OnRightClickEvent;
+            cloneLine.end.OnLeftClickEvent  =  dotsDictionary[line.end.id].OnLeftClickEvent;
+
+            cloneLine.SetStart(cloneLine.start , cloneLine.start.id) ;
+            cloneLine.SetEnd(  cloneLine.end   , cloneLine.end.id  ) ;
+            if(hideSkeleton){
+                cloneLine.lr.enabled = false;
+                cloneLine.start.GetComponent<Image>().enabled = false;
+                cloneLine.end.GetComponent<Image>().enabled = false;
+            }
+            
+            copySkeleton.lines.Add(cloneLine);     
+        }
+
+        return copySkeleton;
     }
 
     private bool IsContains(Vector3 vector,List<Vector3> vs){

@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using Framation;
 
@@ -137,9 +138,18 @@ public class Drawing : View
             _BackToFramesUI.SetActive(false);
             _text.SetActive(false);
             _ControlMaxDot.SetActive(false);     
-            print("another id : " + PenTool.frameId );  
-            // spriteChangedMode = 
-            // drawable_texture.LoadImage(File.ReadAllBytes("images\\" + ( PenTool.frameId + 1 ) + ".png"));
+            PenTool.penTool.doCopySkeleton1 = true;
+            Drawable.drawable.drawable_texture.LoadImage(File.ReadAllBytes("images\\" + ( PenTool.frameId - 1 ) + ".png"));
+            Drawable.drawable.drawable_texture.Apply();
+            Drawable.drawable.drawable_sprite  = Sprite.Create(
+                Drawable.drawable.drawable_texture,
+                new UnityEngine.Rect(0, 0,
+                Drawable.drawable.drawable_texture.width,
+                Drawable.drawable.drawable_texture.height),
+                Vector2.one * 0.5f
+            );
+            Drawable.drawable.drawable_texture = Drawable.drawable.drawable_sprite.texture;
+            Drawable.drawable.counterIndex     = 1 ; 
             vanishMode    = true;       
         });
 

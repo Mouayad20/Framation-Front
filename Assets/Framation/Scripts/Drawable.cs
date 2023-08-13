@@ -254,24 +254,6 @@ namespace Framation
 
             }
 
-            if (Input.GetKeyDown(KeyCode.Q)){
-                string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
-                string imagesDirectory = @"C:\Users\HP\Downloads\Compressed\Framation Front\frames"; // Replace with the directory containing your images
-                string outputVideoPath = @"C:\Users\HP\Downloads\Compressed\Framation Front\output.mp4"; // Replace with the desired output video path
-
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = ffmpegPath;
-                startInfo.Arguments = $"-framerate 24 -i .\\images\\%d.png koko.mp4";
-                startInfo.UseShellExecute = false;
-                startInfo.RedirectStandardOutput = true;
-                using (Process process = Process.Start(startInfo))
-                {
-                    process.WaitForExit();
-                }
-
-                print("Video created successfully!");
-            }
-
         }
 
 
