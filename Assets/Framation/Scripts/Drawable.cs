@@ -241,12 +241,15 @@ namespace Framation
 
             if (changeTexture){
 
-                drawable_texture.LoadImage(Scroll.spriteToChange);
-                print("Drawable : " + Scroll.spritePath);
-                drawable_texture.Apply();
-                drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
-                drawable_texture = drawable_sprite.texture;
-                counterIndex = 1 ;
+                if(Scroll.spriteIsChanged){
+                    drawable_texture.LoadImage(Scroll.spriteToChange);
+                    print("Drawable : " + Scroll.spritePath);
+                    drawable_texture.Apply();
+                    drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
+                    drawable_texture = drawable_sprite.texture;
+                    counterIndex = 1 ;
+                    Scroll.spriteIsChanged = false;
+                }
                 changeTexture    = false;
 
             }
@@ -507,6 +510,9 @@ namespace Framation
         {
             drawable_texture.LoadImage(File.ReadAllBytes("Assets\\FreeDraw\\Art\\Images\\whiteBoard.png"));
             drawable_texture.Apply();
+            drawable_sprite  = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.one * 0.5f);
+            drawable_texture = drawable_sprite.texture;
+            counterIndex = 0 ; 
         }
 
         void Awake()

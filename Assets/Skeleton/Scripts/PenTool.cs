@@ -31,6 +31,7 @@ public class PenTool : MonoBehaviour
     public  static List<Skeleton> skeletons;
     private Skeleton basicSkeleton;
     private Skeleton copySkeleton ;
+    private Skeleton copySkeleton2 ;
     private DotController prevDot ;
     private DotController maxDot  ;
     private DotController dot     ;
@@ -85,87 +86,81 @@ public class PenTool : MonoBehaviour
             }
         } 
         if(move){
+
             if ( k >= 1.0f ) {
-                k = 0.0f;
+                move = false;
             }
-            k = k + 0.0001f ;
+            k = k + (1.0f/(float)frameNum) ;
 
             Skeleton skeleton1 = skeletons[0]; 
             Skeleton skeleton2 = skeletons[1]; 
             
-            if(calculateF){
-                calculateF = false;
-                vectors = GenerateInBetweenVectors(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position,10);
-            }
-           
-            float distance = Vector3.Distance(skeleton1.lines[0].start.transform.position, skeleton2.lines[0].start.transform.position);
-            
-            if ( !( ( distance >= 0.00 ) && ( distance <= 0.01 ) ) ){
-
-                if (IsContains(skeleton1.lines[0].start.transform.position,vectors)) {
-                    StartCoroutine(TakeScreenshot(frameId + ".png"));
-                    frameId += 1;
-                }
-            
-                Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
-                for(int i = 0 ; i< skeleton1.lines.Count ; i++) {
-                    
-                    if ( i == 0 ){
-                        skeleton1.lines[i].start.transform.position = Vector3.Lerp(skeleton1.lines[i].start.transform.position, skeleton2.lines[i].start.transform.position, k);
-                        skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);                    
-                    }else{
-                        skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);
-                    }
-
-                    HashSet<UpdateAll> uniqueUpdateAll = new HashSet<UpdateAll>();
-                    foreach(Triangle triangle in Drawable.drawable.output[skeleton1.lines[i]]){
-                        if(!uniqueUpdateAll.Contains(triangle.a))
-                            uniqueUpdateAll.Add(triangle.a);
-                        if(!uniqueUpdateAll.Contains(triangle.b))
-                            uniqueUpdateAll.Add(triangle.b);
-                        if(!uniqueUpdateAll.Contains(triangle.c))
-                            uniqueUpdateAll.Add(triangle.c);
-                    }
-
-                    foreach(UpdateAll updateAll in uniqueUpdateAll){
-                        if(!pointLines.ContainsKey(updateAll))
-                            pointLines[updateAll] = new List<LineController>();
-                        pointLines[updateAll].Add(skeleton1.lines[i]);
-                    }
+            Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
+            for(int i = 0 ; i< skeleton1.lines.Count ; i++) {
+                // print("__________________");
+                // print("start1 : " + skeleton1.lines[i].start.transform.position);
+                // print("end111 : " + skeleton1.lines[i].end.transform.position);
+                // print("start2 : " + copySkeleton2.lines[i].start.transform.position);
+                // print("end222 : " + copySkeleton2.lines[i].end.transform.position);
                 
-                }  
-                foreach(KeyValuePair<UpdateAll, List<LineController>> kvp in pointLines){
-                    UpdateAll result = new UpdateAll(99999999,new Vector3(0, 0, 0));
+                if ( i == 0 ){
+                    skeleton1.lines[i].start.transform.position = Vector3.Lerp(skeleton1.lines[i].start.transform.position, skeleton2.lines[i].start.transform.position, k);
+                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);                    
+                }else{
+                    skeleton1.lines[i].end.transform.position   = Vector3.Lerp(skeleton1.lines[i].end.transform.position  , skeleton2.lines[i].end.transform.position  , k);
+                }
 
-                    foreach(LineController line in kvp.Value){
-                        Vector3 localCenter = new Vector3(
-                            (line.start.transform.position.x + line.end.transform.position.x) / 2 ,
-                            (line.start.transform.position.y + line.end.transform.position.y) / 2 ,
-                            (line.start.transform.position.z + line.end.transform.position.z) / 2  
-                        );
+                HashSet<UpdateAll> uniqueUpdateAll = new HashSet<UpdateAll>();
+                foreach(Triangle triangle in Drawable.drawable.output[skeleton1.lines[i]]){
+                    if(!uniqueUpdateAll.Contains(triangle.a))
+                        uniqueUpdateAll.Add(triangle.a);
+                    if(!uniqueUpdateAll.Contains(triangle.b))
+                        uniqueUpdateAll.Add(triangle.b);
+                    if(!uniqueUpdateAll.Contains(triangle.c))
+                        uniqueUpdateAll.Add(triangle.c);
+                }
 
-                        UpdateAll cur = new UpdateAll(kvp.Key.id,kvp.Key.vector);
+                foreach(UpdateAll updateAll in uniqueUpdateAll){
+                    if(!pointLines.ContainsKey(updateAll))
+                        pointLines[updateAll] = new List<LineController>();
+                    pointLines[updateAll].Add(skeleton1.lines[i]);
+                }
+            
+            }  
+            foreach(KeyValuePair<UpdateAll, List<LineController>> kvp in pointLines){
+                UpdateAll result = new UpdateAll(99999999,new Vector3(0, 0, 0));
 
-                        cur.vector = cur.vector - localCenter ; 
+                foreach(LineController line in kvp.Value){
+                    Vector3 localCenter = new Vector3(
+                        (line.start.transform.position.x + line.end.transform.position.x) / 2 ,
+                        (line.start.transform.position.y + line.end.transform.position.y) / 2 ,
+                        (line.start.transform.position.z + line.end.transform.position.z) / 2  
+                    );
 
-                        cur.vector = Vector3.Scale(cur.vector , line.scale);
-                        cur.vector = cur.vector + line.positionChange ;
-                        cur.vector = Quaternion.Euler(0f, 0f,  line.rotationChange) * cur.vector ;
-                        
-                        cur.vector = cur.vector + localCenter ; 
+                    UpdateAll cur = new UpdateAll(kvp.Key.id,kvp.Key.vector);
 
-                        result.vector += cur.vector;
-                    }
-                    result.vector /= kvp.Value.Count;
+                    cur.vector = cur.vector - localCenter ; 
 
-                    kvp.Key.vector = result.vector;
-                    for (int i = 0; i < newVertices.Count; i++){
-                        if (newVertices[i].id == kvp.Key.id) {
-                            textureVertices[kvp.Key.id] = kvp.Key.vector;
-                        }
+                    cur.vector = Vector3.Scale(cur.vector , line.scale);
+                    cur.vector = cur.vector + line.positionChange ;
+                    cur.vector = Quaternion.Euler(0f, 0f,  line.rotationChange) * cur.vector ;
+                    
+                    cur.vector = cur.vector + localCenter ; 
+
+                    result.vector += cur.vector;
+                }
+                result.vector /= kvp.Value.Count;
+
+                kvp.Key.vector = result.vector;
+                for (int i = 0; i < newVertices.Count; i++){
+                    if (newVertices[i].id == kvp.Key.id) {
+                        textureVertices[kvp.Key.id] = kvp.Key.vector;
                     }
                 }
             }
+        
+            StartCoroutine(TakeScreenshot(frameId + ".png"));
+            frameId += 1;
         }
         if(moveSkeleton2){
             maxDot.onDragMoveEvent += MoveMaxDot;
@@ -194,6 +189,7 @@ public class PenTool : MonoBehaviour
         }
         if(Drawing.drawSkelton2Mode){
             copySkeleton = new Skeleton();
+            copySkeleton2 = new Skeleton();
             Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
             foreach(LineController line in basicSkeleton.lines){
                 if(!dotsDictionary.ContainsKey(line.start.id)){
@@ -246,6 +242,7 @@ public class PenTool : MonoBehaviour
                 cloneLine.SetEnd(  cloneLine.end   , cloneLine.end.id  ) ;
                 
                 copySkeleton.lines.Add(cloneLine);   
+                // copySkeleton2.lines.Add(cloneLine);   
             }
 
             skeletons.Add(basicSkeleton);
@@ -278,14 +275,13 @@ public class PenTool : MonoBehaviour
             doLinking     = false;
             move     = false;
             penTool  = this;
-            frameNum = 20  ; 
+            // frameNum = 20  ; 
             fffff    = 0   ; 
             calculateF = true;
             vectors = new List<Vector3>();
         }
         
     }
-
 
     private bool IsContains(Vector3 vector,List<Vector3> vs){
         bool isContains = false; 

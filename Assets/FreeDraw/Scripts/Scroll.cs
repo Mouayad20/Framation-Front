@@ -15,6 +15,7 @@ public class Scroll : MonoBehaviour {
 
     public static byte[] spriteToChange;
     public static string spritePath;
+    public static bool   spriteIsChanged;
 
     public void Start(){
         buttonPrefab = Instantiate( scrollContent.GetChild(0).gameObject);
@@ -48,6 +49,7 @@ public class Scroll : MonoBehaviour {
                 Drawable.drawable.changeTexture = true;
                 spriteToChange = imageTexture.EncodeToPNG();
                 spritePath = imagePath;
+                spriteIsChanged  = true;
                 // spriteToChange = Sprite.Create(imageTexture, new Rect(0, 0, imageTexture.width, imageTexture.height), Vector2.zero);
                 // Sprite.Create(
                 //     button.GetComponentInChildren<Image>().sprite.texture,

@@ -37,6 +37,7 @@ public class Drawing : View
     public static bool moveToDrawingBoard; 
     public static bool finishMode; 
     public static bool vanishMode; 
+    public static bool spriteChangedMode; 
 
     private void Update() {
         if(moveToDrawingBoard){
@@ -63,6 +64,7 @@ public class Drawing : View
         drawSkelton2Mode   = false;
         moveToDrawingBoard = false;
         vanishMode         = false;
+        spriteChangedMode  = false;
         
         _ClearBoardButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
@@ -134,7 +136,10 @@ public class Drawing : View
             _showButton.SetActive(false);
             _BackToFramesUI.SetActive(false);
             _text.SetActive(false);
-            _ControlMaxDot.SetActive(false);       
+            _ControlMaxDot.SetActive(false);     
+            print("another id : " + PenTool.frameId );  
+            // spriteChangedMode = 
+            // drawable_texture.LoadImage(File.ReadAllBytes("images\\" + ( PenTool.frameId + 1 ) + ".png"));
             vanishMode    = true;       
         });
 
@@ -145,8 +150,7 @@ public class Drawing : View
 
         _BackToFramesUIButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("DrawAndFinish");
-            System.IO.File.WriteAllBytes(Scroll.spritePath, Drawable.drawable.drawable_texture.EncodeToPNG());
-            print("Frames : " + Scroll.spritePath);
+            System.IO.File.WriteAllBytes(Scroll.spritePath, Drawable.drawable.drawable_texture.EncodeToPNG()); // save modified frame 
             Drawable.drawable.go.SetActive(true);
             Drawable.drawable.ResetCanvas();
             ViewManager.Show<Frames>();
