@@ -257,8 +257,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4288893139
+  m_fontColor: {r: 0.82745105, g: 0.3137255, b: 0.6392157, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -350,8 +350,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498336018}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -959.9017, y: -539.9913, z: 0}
-  m_LocalScale: {x: 1.4126681, y: 1.4109848, z: 1}
+  m_LocalPosition: {x: -960.0323, y: -540.0192, z: 0}
+  m_LocalScale: {x: 1.8156542, y: 1.5218194, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1257756279}

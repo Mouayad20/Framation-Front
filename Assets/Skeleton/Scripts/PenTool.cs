@@ -52,6 +52,7 @@ public class PenTool : MonoBehaviour
     public static int frameNum;
     public static int frameId;
     private int   fffff;
+    private float step;
     private List<Vector3> vectors;
 
     private void Start()  {
@@ -72,6 +73,7 @@ public class PenTool : MonoBehaviour
         penTool  = this;
         frameNum = 24 ; 
         frameId  = 0 ; 
+        step    = 0 ; 
         vectors = new List<Vector3>(); 
     }
 
@@ -85,12 +87,16 @@ public class PenTool : MonoBehaviour
             }
         } 
         if(move){
+            if(k > 0)
+                StartCoroutine(TakeScreenshot(frameId + ".png"));
+            frameId += 1;
+            step  = ( 1.0f / ( float ) ( frameNum - 1 ) ) ;
 
-            if ( k >= 1.0f ) {
+            if ( k >= (1.0f + step) ) {
                 move = false;
             }
 
-            k = k + ( 1.0f / ( float ) frameNum ) ;
+            k    = k + step ;
 
             Skeleton skeleton1 = skeletons[0]; 
             Skeleton skeleton2 = skeletons[1]; 
@@ -159,9 +165,7 @@ public class PenTool : MonoBehaviour
                     }
                 }
             }
-        
-            StartCoroutine(TakeScreenshot(frameId + ".png"));
-            frameId += 1;
+            
         }
         if(moveSkeleton2){
             maxDot.onDragMoveEvent += MoveMaxDot;
