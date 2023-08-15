@@ -59,7 +59,7 @@ public class Scroll : MonoBehaviour
             Texture2D imageTexture = LoadImageFromDisk(imagePath);
 
             GameObject button = Instantiate(buttonPrefab, scrollContent);
-            button.GetComponentInChildren<Text>().text = "frame " + (int.Parse(Path.GetFileNameWithoutExtension(imagePath)) + 1);
+            button.GetComponentInChildren<Text>().text = "frame " + int.Parse(Path.GetFileNameWithoutExtension(imagePath));
             button.GetComponentInChildren<Image>().sprite = Sprite.Create(imageTexture, new Rect(0, 0, imageTexture.width, imageTexture.height), Vector2.zero);
             button.GetComponent<Button>().onClick.AddListener(() =>
             {

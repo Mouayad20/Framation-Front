@@ -1,4 +1,4 @@
-
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
@@ -6,6 +6,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Framation;
+using SFB;
 
 public class Frames : View
 {
@@ -33,26 +34,24 @@ public class Frames : View
 
         _SaveVideoButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("Options");
-            string selectedPath = UnityEditor.EditorUtility.OpenFolderPanel("Select Folder", "", "");
-            if (!string.IsNullOrEmpty(selectedPath))
-            {   
+
+            string[] selectedPath = StandaloneFileBrowser.OpenFolderPanel("Select Folder", "", false);
+
+            if (!string.IsNullOrEmpty(selectedPath[0]))
+            {
                 string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
-                
                 ProcessStartInfo startInfo       = new ProcessStartInfo();
                 startInfo.FileName               = ffmpegPath;
-                startInfo.Arguments              = $"-framerate 24 -i .\\images\\%d.png {selectedPath}\\sketch.mp4";
+                startInfo.Arguments = $"-framerate 24 -i .\\images\\%d.png \"{selectedPath[0]}\\output.mp4\"";
                 startInfo.UseShellExecute        = false;
                 startInfo.CreateNoWindow         = true;
                 startInfo.RedirectStandardOutput = true;
-
                 using (Process process = Process.Start(startInfo))
                 {
                     process.WaitForExit();
                 }
-
-                print("Video created successfully! in >  " + selectedPath);
-            }
-            
+                print("Video created successfully! in >  " + selectedPath[0]);
+            }    
         });
     }
 

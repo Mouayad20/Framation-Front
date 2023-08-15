@@ -87,8 +87,9 @@ public class PenTool : MonoBehaviour
             }
         } 
         if(move){
-            if(k > 0)
+            if(k > 0){
                 StartCoroutine(TakeScreenshot(frameId + ".png"));
+            }
             frameId += 1;
             step  = ( 1.0f / ( float ) ( frameNum - 1 ) ) ;
 

@@ -39,7 +39,7 @@ namespace Framation
 
         public bool Reset_Canvas_On_Play = true;
         // The colour the canvas is reset to each time
-        public Color Reset_Colour = new Color(0, 0, 0, 0);  // By default, reset the canvas to be transparent
+        public Color Reset_Colour = new Color(1, 1, 1, 1);  // By default, reset the canvas to be transparent
 
         // Used to reference THIS specific file without making all methods static
         public static Drawable drawable;
@@ -243,7 +243,6 @@ namespace Framation
 
                 if(Scroll.spriteIsChanged){
                     drawable_texture.LoadImage(Scroll.spriteToChange);
-                    print("Drawable : " + Scroll.spritePath);
                     drawable_texture.Apply();
                     drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
                     drawable_texture = drawable_sprite.texture;
@@ -252,6 +251,11 @@ namespace Framation
                 }
                 changeTexture    = false;
 
+            }
+
+             if (Input.GetKeyDown(KeyCode.D))
+            {
+                // Do something when "D" key is pressed
             }
 
         }
@@ -490,7 +494,9 @@ namespace Framation
         // Changes every pixel to be the reset colour
         public void ResetCanvas()
         {
-            drawable_texture.LoadImage(File.ReadAllBytes("Assets\\FreeDraw\\Art\\Images\\whiteBoard.png"));
+            // drawable_texture.LoadImage(File.ReadAllBytes("Assets\\whiteBoard.png"));
+
+            drawable_texture.SetPixels(clean_colours_array);
             drawable_texture.Apply();
             drawable_sprite  = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.one * 0.5f);
             drawable_texture = drawable_sprite.texture;
