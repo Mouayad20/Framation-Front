@@ -63,8 +63,6 @@ public class Scroll : MonoBehaviour
             button.GetComponentInChildren<Image>().sprite = Sprite.Create(imageTexture, new Rect(0, 0, imageTexture.width, imageTexture.height), Vector2.zero);
             button.GetComponent<Button>().onClick.AddListener(() =>
             {
-                Debug.Log("Button clicked: " + imagePath);
-
                 ViewManager.Show<Drawing>();
                 Drawing.moveToDrawingBoard = true;
                 _GoToHome.SetActive(false);

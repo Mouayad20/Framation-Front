@@ -4,6 +4,7 @@ namespace Framation
     using UnityEngine.EventSystems;
     using UnityEngine.UI;
     using System.IO;
+    using System.Linq;
     using System.Diagnostics;
     using System.Collections;
     using System.Collections.Generic;
@@ -67,7 +68,6 @@ namespace Framation
             public bool DrawTriangulation = false ;
             public bool changeTexture = false ;
             public GameObject go ;
-            public int counterIndex = 0 ;
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -246,7 +246,6 @@ namespace Framation
                     drawable_texture.Apply();
                     drawable_sprite = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
                     drawable_texture = drawable_sprite.texture;
-                    counterIndex = 1 ;
                     Scroll.spriteIsChanged = false;
                 }
                 changeTexture    = false;
@@ -304,26 +303,29 @@ namespace Framation
                         // Extract Contours
                         Point[][] contours;
                         HierarchyIndex[] hierarchy;
-                        Cv2.FindContours (thresh, out contours, out hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple, null);
+                        Cv2.FindContours (thresh, out contours, out hierarchy, RetrievalModes.External, ContourApproximationModes.ApproxSimple, null);
+
                         
-                        // Cv2.DrawContours(image, contours, 0, Scalar.Red, 2);
-                        // Cv2.DrawContours(image, contours, 1, Scalar.Black, 2);
-                        // Cv2.DrawContours(image, contours, 2, Scalar.Yellow, 2);
-                        // // Display the result
+                        List<Point[]> largestContours = new List<Point[]>();
+                        largestContours = contours.Select(innerArray => innerArray.ToArray()).ToList();
+
+                        // Sort the contours by area in descending order
+                        largestContours = largestContours.OrderByDescending(c => Cv2.ContourArea(c)).ToList();
+
+                        // Cv2.DrawContours(image, largestContours, 0, Scalar.Yellow  , 3, LineTypes.Link8);
+                        // Cv2.DrawContours(image, largestContours, 1, Scalar.Blue , 3, LineTypes.Link8);
+                        // Display the result
                         // Cv2.ImShow("Contours", image);
                         // Cv2.WaitKey(0);
                         // Cv2.DestroyAllWindows();
                         
-                        for (int k = 0 ; k < contours[counterIndex].Length  ; k++){
+                        for (int k = 0 ; k < largestContours[0].Length  ; k++){
                             points.Add(
                                 new Vector2(
-                                    ((  contours[counterIndex][k].X - center_x ) / 100 ) + 0.05f ,
-                                    (( -contours[counterIndex][k].Y - center_y ) / 100 ) + 0.05f 
+                                    ((  largestContours[0][k].X - center_x ) / 100 ) + 0.05f ,
+                                    (( -largestContours[0][k].Y - center_y ) / 100 ) + 0.05f 
                                     )
                                 );
-                        }
-                        if(counterIndex == 1){
-                            counterIndex = 0 ;
                         }
 
                     //    END  find contours from texture
@@ -494,13 +496,10 @@ namespace Framation
         // Changes every pixel to be the reset colour
         public void ResetCanvas()
         {
-            // drawable_texture.LoadImage(File.ReadAllBytes("Assets\\whiteBoard.png"));
-
             drawable_texture.SetPixels(clean_colours_array);
             drawable_texture.Apply();
-            drawable_sprite  = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.one * 0.5f);
+            drawable_sprite  = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
             drawable_texture = drawable_sprite.texture;
-            counterIndex = 0 ; 
         }
 
         void Awake()

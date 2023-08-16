@@ -42,7 +42,7 @@ public class Frames : View
                 string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
                 ProcessStartInfo startInfo       = new ProcessStartInfo();
                 startInfo.FileName               = ffmpegPath;
-                startInfo.Arguments = $"-framerate 24 -i .\\images\\%d.png \"{selectedPath[0]}\\output.mp4\"";
+                startInfo.Arguments = $"-y -framerate 24 -i .\\images\\%d.png \"{selectedPath[0]}\\output.mp4\"";
                 startInfo.UseShellExecute        = false;
                 startInfo.CreateNoWindow         = true;
                 startInfo.RedirectStandardOutput = true;

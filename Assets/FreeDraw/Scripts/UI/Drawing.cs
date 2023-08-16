@@ -3,8 +3,9 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using OpenCvSharp;
 using Framation;
-
+using AnotherFileBrowser.Windows;
 
 public class Drawing : View
 {
@@ -16,6 +17,7 @@ public class Drawing : View
     [SerializeField] public Button _DeleteDotButton ;
     [SerializeField] public Button _BackToFramesUIButton ;
     [SerializeField] public Button _ClearBoardButton ;
+    [SerializeField] public Button _ChoseImageButton ;
     [SerializeField] public GameObject _color_panel;
     [SerializeField] public GameObject _video_panel;
     [SerializeField] public GameObject _video_panel_2;
@@ -29,7 +31,7 @@ public class Drawing : View
     [SerializeField] public GameObject _DeleteDot ;
     [SerializeField] public GameObject _BackToFramesUI ;
     [SerializeField] public GameObject _ClearBoard ;
-    [SerializeField] public Transform  scroll;
+    [SerializeField] public GameObject _ChoseImage ;
 
     public static bool drawSkeltonMode; 
     public static bool drawSkelton2Mode; 
@@ -83,6 +85,7 @@ public class Drawing : View
             _video_panel.SetActive(true);
             _DrawSkeletonTwo.SetActive(true);
             _color_panel.SetActive(false);
+            _ChoseImage.SetActive(false);
             _ClearBoard.SetActive(false);
             _video_panel_2.SetActive(false);
             _DrawSkeleton.SetActive(false);
@@ -97,6 +100,7 @@ public class Drawing : View
              _Finish.SetActive(true);
              _ControlMaxDot.SetActive(true);
              _text.SetActive(true);
+             _ChoseImage.SetActive(false);
              _color_panel.SetActive(false);
              _ClearBoard.SetActive(false);
              _video_panel.SetActive(false);
@@ -112,6 +116,7 @@ public class Drawing : View
             _showButton.SetActive(true);
             _color_panel.SetActive(false);
             _ClearBoard.SetActive(false);
+            _ChoseImage.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
             _Finish.SetActive(false);
@@ -127,6 +132,7 @@ public class Drawing : View
             Audio_Manager.Instance.PlaySound("GoToBack");
             _color_panel.SetActive(true);
             _ClearBoard.SetActive(true);
+            _ChoseImage.SetActive(true);
             _DrawSkeleton.SetActive(true);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
@@ -146,10 +152,10 @@ public class Drawing : View
                 new UnityEngine.Rect(0, 0,
                 Drawable.drawable.drawable_texture.width,
                 Drawable.drawable.drawable_texture.height),
-                Vector2.one * 0.5f
+                Vector2.zero
             );
             Drawable.drawable.drawable_texture = Drawable.drawable.drawable_sprite.texture;
-            Drawable.drawable.counterIndex     = 1 ; 
+            PenTool.frameId = PenTool.frameId - 1  ;
             vanishMode    = true;       
         });
 
@@ -174,6 +180,39 @@ public class Drawing : View
         _showButton.GetComponent<Button>().onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
             ViewManager.Show<Frames>();
+        });
+
+        _ChoseImageButton.GetComponent<Button>().onClick.AddListener(()=>{
+            Audio_Manager.Instance.PlaySound("GoToBack");
+            var bp = new BrowserProperties();
+            bp.filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
+            bp.filterIndex = 0;
+
+            new FileBrowser().OpenFileBrowser(bp, path =>
+            {
+                
+                Texture2D texture = new Texture2D(20,20);
+                texture.LoadImage(File.ReadAllBytes(path));
+                Mat outputTexture = new Mat();
+                Cv2.Resize(
+                    OpenCvSharp.Unity.TextureToMat(texture),
+                    outputTexture,
+                    new Size(1300, 925)
+                );
+                Drawable.drawable.drawable_texture.LoadImage(OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
+                Drawable.drawable.drawable_texture.Apply();
+                Drawable.drawable.drawable_sprite  = Sprite.Create(
+                    Drawable.drawable.drawable_texture,
+                    new UnityEngine.Rect(0, 0,
+                    Drawable.drawable.drawable_texture.width,
+                    Drawable.drawable.drawable_texture.height),
+                    Vector2.zero
+                );
+                Drawable.drawable.drawable_texture = Drawable.drawable.drawable_sprite.texture;
+                
+            });
+
+
         });
     }
 }

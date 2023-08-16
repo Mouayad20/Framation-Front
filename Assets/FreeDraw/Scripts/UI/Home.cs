@@ -18,7 +18,8 @@ public class Home: View
     [SerializeField] private GameObject _text;
     [SerializeField] private GameObject _ControlMaxDot ;
     [SerializeField] private GameObject _DeleteDot ;
-    [SerializeField] public GameObject _ClearBoard ;
+    [SerializeField] private GameObject _ClearBoard ;
+    [SerializeField] private GameObject _ChoseImage ;
 
 
     public override void Initialize()
@@ -29,6 +30,7 @@ public class Home: View
             _color_panel.SetActive(true);
             _ClearBoard.SetActive(true);
             _DrawSkeleton.SetActive(true);
+            _ChoseImage.SetActive(true);
             _DeleteDot.SetActive(false);
             _video_panel.SetActive(false);
             _video_panel_2.SetActive(false);
