@@ -41,8 +41,8 @@ public class Home: View
             _text.SetActive(false);
             _ControlMaxDot.SetActive(false);
             Drawing.vanishMode = true;
-            Directory.Delete("images", true);
-            Directory.CreateDirectory("images");
+            Directory.Delete("Assets\\images", true);
+            Directory.CreateDirectory("Assets\\images");
             PenTool.frameId = 0 ;
         });
 

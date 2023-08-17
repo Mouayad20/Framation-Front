@@ -145,7 +145,7 @@ public class Drawing : View
             _text.SetActive(false);
             _ControlMaxDot.SetActive(false);     
             PenTool.penTool.doCopySkeleton1 = true;
-            Drawable.drawable.drawable_texture.LoadImage(File.ReadAllBytes("images\\" + ( PenTool.frameId - 1 ) + ".png"));
+            Drawable.drawable.drawable_texture.LoadImage(File.ReadAllBytes("Assets\\images\\" + ( PenTool.frameId - 1 ) + ".png"));
             Drawable.drawable.drawable_texture.Apply();
             Drawable.drawable.drawable_sprite  = Sprite.Create(
                 Drawable.drawable.drawable_texture,

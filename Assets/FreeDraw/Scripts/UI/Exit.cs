@@ -6,6 +6,7 @@ public class Exit : MonoBehaviour
 {
     public void Quitgame()
     {
+        print("koooooooooooooooo");
         Application.Quit();
     }
 }

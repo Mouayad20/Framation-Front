@@ -18,7 +18,7 @@ public class Scroll : MonoBehaviour
     public static string spritePath;
     public static bool spriteIsChanged;
     
-    private static string folderPath = "images";
+    private static string folderPath = "Assets\\images";
     private static string[] imagePaths;
     private int currentPage = 0;
     private int imagesPerPage = 10;

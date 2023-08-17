@@ -35,29 +35,29 @@ public class Frames : View
         _SaveVideoButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("Options");
 
-            // string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
-            // ProcessStartInfo startInfo       = new ProcessStartInfo();
-            // startInfo.FileName               = ffmpegPath;
-            // File.Delete("Assets\\Video\\sketch.mp4");
-            // startInfo.Arguments = $"-y -framerate 24 -i .\\images\\%d.png -c:v vp9 \"Assets\\Video\\sketch.mp4\"";
-            // startInfo.UseShellExecute        = false;
-            // startInfo.CreateNoWindow         = true ;
-            // startInfo.RedirectStandardOutput = true ;
-            // using (Process process = Process.Start(startInfo))
-            // {
-            //     process.WaitForExit();
-            // }
+            string ffmpegPath = @"ffmpeg"; // Replace with your FFmpeg executable path
+            ProcessStartInfo startInfo       = new ProcessStartInfo();
+            startInfo.FileName               = ffmpegPath;
+            File.Delete("Assets\\Video\\sketch.mp4");
+            startInfo.Arguments = $"-y -framerate 24 -i .\\Assets\\images\\%d.png -c:v vp9 \"Assets\\Video\\sketch.mp4\"";
+            startInfo.UseShellExecute        = false;
+            startInfo.CreateNoWindow         = true ;
+            startInfo.RedirectStandardOutput = true ;
+            using (Process process = Process.Start(startInfo))
+            {
+                process.WaitForExit();
+                ViewManager.Show<Video>();
+            }
 
-            ViewManager.Show<Video>();
 
             // string[] selectedPath = StandaloneFileBrowser.OpenFolderPanel("Select Folder", "", false);
 
             // if (!string.IsNullOrEmpty(selectedPath[0]))
             // {
-            //     string ffmpegPath = @"C:\ffmpeg\bin\ffmpeg.exe"; // Replace with your FFmpeg executable path
+            //     string ffmpegPath = @"ffmpeg"; // Replace with your FFmpeg executable path
             //     ProcessStartInfo startInfo       = new ProcessStartInfo();
             //     startInfo.FileName               = ffmpegPath;
-            //     startInfo.Arguments = $"-y -framerate 24 -i .\\images\\%d.png \"{selectedPath[0]}\\output.mp4\"";
+            //     startInfo.Arguments = $"-y -framerate 24 -i .\\Assets\\images\\%d.png \"{selectedPath[0]}\\output.mp4\"";
             //     startInfo.UseShellExecute        = false;
             //     startInfo.CreateNoWindow         = true;
             //     startInfo.RedirectStandardOutput = true;

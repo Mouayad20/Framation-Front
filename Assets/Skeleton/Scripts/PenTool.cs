@@ -503,6 +503,6 @@ public class PenTool : MonoBehaviour
         Mat outputTexture = new Mat();
         Cv2.Resize(OpenCvSharp.Unity.TextureToMat(screenshotTexture), outputTexture, new Size(1300, 925));
 
-        System.IO.File.WriteAllBytes("images\\"+ filename, OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
+        System.IO.File.WriteAllBytes("Assets\\images\\"+ filename, OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
     }
 }

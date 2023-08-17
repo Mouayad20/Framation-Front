@@ -1,46 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
-public class DropdownHandler : MonoBehaviour
+public class DropDownHandler : MonoBehaviour
 {
-    [SerializeField] private static TMP_Text numberText;
-    private int selectedValue;
+    public TextMeshProUGUI Text;
+    private string selectedValue;
 
-    private void Start()
-    {
-        // Load the previously saved value
-        selectedValue = PlayerPrefs.GetInt("SelectedValue", 0);
-        SetNumberText(selectedValue);
-    }
-
-    public void Dropdown(int index)
-    {
-        selectedValue = index;
-        SetNumberText(selectedValue);
-        PlayerPrefs.SetInt("SelectedValue", selectedValue);
-    }
-    public void SetNumberText(int value)
-    {
-        // print("value : " + value);
-        numberText.text = GetNumberFromIndex(value).ToString();
-        print("Selected value: " + numberText.text);
-    }
-
-    private int GetNumberFromIndex(int index)
+    public void DropDown(int index)
     {
         switch (index)
         {
             case 0:
-                return 240;
+                selectedValue = "426x240";
+                Text.gameObject.SetActive(true);
+                break;
             case 1:
-                return 270;
+                selectedValue = "640x360";
+                Text.gameObject.SetActive(false);
+                break;
             case 2:
-                return 720;
-            default:
-                return 0;
+                selectedValue = "854x480";
+                Text.gameObject.SetActive(false);
+                break;
+            case 3:
+                selectedValue = "1280x720";
+                Text.gameObject.SetActive(false);
+                break;
         }
+        
+        SaveSelectedValue();
+    }
+
+    private void SaveSelectedValue()
+    {
+        PlayerPrefs.SetString("SelectedValue", selectedValue);
+        Video.quality = selectedValue;
     }
 }
