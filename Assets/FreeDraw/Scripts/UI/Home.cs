@@ -39,21 +39,7 @@ public class Home: View
         imagesPath = Application.dataPath + "\\images";
         _startButton.onClick.AddListener(()=> {
             Audio_Manager.Instance.PlaySound("Draw");
-            ViewManager.Show<Drawing>();
-            _color_panel.SetActive(true);
-            _ClearBoard.SetActive(true);
-            _DrawSkeleton.SetActive(true);
-            _ChoseImage.SetActive(true);
-            _DeleteDot.SetActive(false);
-            _video_panel.SetActive(false);
-            _video_panel_2.SetActive(false);
-            _DrawSkeletonTwo.SetActive(false);
-            _Finish.SetActive(false);
-            _drawAnotherViewButton.SetActive(false);
-            _showButton.SetActive(false);
-            _text.SetActive(false);
-            _ControlMaxDot.SetActive(false);
-            Drawing.vanishMode = true;
+            
             if (!Directory.Exists(imagesPath)){
                 Directory.CreateDirectory(imagesPath);
             }else{
@@ -63,11 +49,9 @@ public class Home: View
             if (!File.Exists(sketchVideoPath)){
                 CreateEmptyVideo(sketchVideoPath,10,10,0);
             }
-
             if (!File.Exists(renderTexturePath)){
                 CreateFile(renderTexturePath);
             }
-
             if (!File.Exists(whiteBoardPath)){
                 int width = 1300;
                 int height = 925;
@@ -86,6 +70,20 @@ public class Home: View
                 byte[] imageBytes = whiteImage.EncodeToPNG();
                 File.WriteAllBytes(whiteBoardPath, imageBytes);
             }
+            ViewManager.Show<Drawing>();
+            _color_panel.SetActive(true);
+            _ClearBoard.SetActive(true);
+            _DrawSkeleton.SetActive(true);
+            _ChoseImage.SetActive(true);
+            _DeleteDot.SetActive(false);
+            _video_panel.SetActive(false);
+            _video_panel_2.SetActive(false);
+            _DrawSkeletonTwo.SetActive(false);
+            _Finish.SetActive(false);
+            _drawAnotherViewButton.SetActive(false);
+            _showButton.SetActive(false);
+            _text.SetActive(false);
+            _ControlMaxDot.SetActive(false);
 
             PenTool.frameId = 0 ;
         });

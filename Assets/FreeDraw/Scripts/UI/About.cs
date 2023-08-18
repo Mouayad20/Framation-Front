@@ -6,16 +6,10 @@ using UnityEngine.UI;
 
 public class About : View
 {
-    // [SerializeField] private Button _backButton;
-    // public override void Initialize()
-    // {
-    //     _backButton.onClick.AddListener(()=> ViewManager.ShowLast());
-    // }
 
     [SerializeField] private Button _GoToHomeButton;
     public override void Initialize()
     {
-        // _backButton.onClick.AddListener(()=> ViewManager.ShowLast());
         _GoToHomeButton.onClick.AddListener(()=>{
              Audio_Manager.Instance.PlaySound("GoToBack");
              ViewManager.ShowLast();

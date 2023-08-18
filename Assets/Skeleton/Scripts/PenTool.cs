@@ -225,6 +225,7 @@ public class PenTool : MonoBehaviour
             dX = 0 ; 
             dY = 0 ; 
             moveSkeleton2 = true;
+            doCopySkeleton1 = true;
             doLinking     = false;
             move     = false;
             penTool  = this;

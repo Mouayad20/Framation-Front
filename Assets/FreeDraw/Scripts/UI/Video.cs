@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using SFB;
-
 public class Video : View
 {
     
@@ -20,8 +19,8 @@ public class Video : View
     {
         _GoToHomeButton.onClick.AddListener(()=>{
             Audio_Manager.Instance.PlaySound("GoToBack");
-            ViewManager.Show<Home>();
             Drawing.vanishMode = true;
+            ViewManager.Show<Home>();
         });
 
         _BackToFramesButton.onClick.AddListener(()=>{
