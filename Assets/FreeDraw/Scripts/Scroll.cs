@@ -17,14 +17,14 @@ public class Scroll : MonoBehaviour
     public static byte[] spriteToChange;
     public static string spritePath;
     public static bool spriteIsChanged;
-    
-    private static string folderPath = "Assets\\images";
+    private static string folderPath  ;
     private static string[] imagePaths;
     private int currentPage = 0;
     private int imagesPerPage = 10;
 
     public void Start()
     {
+        folderPath = Application.dataPath + "\\images";
         buttonPrefab = Instantiate(scrollContent.GetChild(0).gameObject);
         scrollContent.GetChild(0).gameObject.SetActive(false);
 
@@ -42,6 +42,7 @@ public class Scroll : MonoBehaviour
     
     public static void LoadImages()
     {
+        folderPath = Application.dataPath + "\\images";
         imagePaths = Directory.GetFiles(folderPath, "*.png");
         imagePaths = imagePaths.OrderBy(path => int.Parse(Path.GetFileNameWithoutExtension(path))).ToArray();
     }

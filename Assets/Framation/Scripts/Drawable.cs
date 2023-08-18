@@ -337,7 +337,7 @@ namespace Framation
                         var vertices = polygon.Vertices;
                         if(vertices.Length < 3) 
                             return; // error
-                        var triangulation = new Triangulation2D(polygon, 30); // #TriangulationAngel
+                        var triangulation = new Triangulation2D(polygon, 20); // #TriangulationAngel
                         go = Instantiate(prefab);
                         go.GetComponent<DemoMesh>().SetTriangulation(triangulation);
                         globalMesh = go.GetComponent<DemoMesh>().mesh;
@@ -496,7 +496,7 @@ namespace Framation
         // Changes every pixel to be the reset colour
         public void ResetCanvas()
         {
-            drawable_texture.SetPixels(clean_colours_array);
+            drawable_texture.LoadImage(File.ReadAllBytes(Home.whiteBoardPath));
             drawable_texture.Apply();
             drawable_sprite  = Sprite.Create(drawable_texture, new UnityEngine.Rect(0, 0, drawable_texture.width, drawable_texture.height), Vector2.zero);
             drawable_texture = drawable_sprite.texture;

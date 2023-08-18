@@ -854,9 +854,9 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.3200783, g: 0.4681026, b: 0.764151, a: 1}
+    m_NormalColor: {r: 0.27960128, g: 0.4475261, b: 0.7924528, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.7688617, g: 0.7735849, b: 0.6524386, a: 1}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -880,7 +880,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.3
+  m_Value: 0.586
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -5452,7 +5452,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   videoScreen: {fileID: 1498868047}
-  videoFilePath: Assets/Video/sketch.mp4
   renderTexture: {fileID: 8400000, guid: ff4ee5662b38a7c448141f2365015091, type: 2}
 --- !u!114 &741602124
 MonoBehaviour:
@@ -10553,7 +10552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.29803923, g: 0.6862745, b: 0.8352942, a: 0.8156863}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8156863}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11215,8 +11214,8 @@ RectTransform:
   m_Father: {fileID: 1077938164}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.3, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMin: {x: 0.586, y: 0}
+  m_AnchorMax: {x: 0.586, y: 1}
   m_AnchoredPosition: {x: -1.4348984, y: 0}
   m_SizeDelta: {x: 17.1303, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13669,7 +13668,7 @@ MonoBehaviour:
   Drawing_Layers:
     serializedVersion: 2
     m_Bits: 32
-  Reset_Canvas_On_Play: 1
+  Reset_Canvas_On_Play: 0
   Reset_Colour: {r: 1, g: 1, b: 1, a: 0}
   drawable_sprite: {fileID: 0}
   drawable_texture: {fileID: 0}
@@ -17153,7 +17152,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMax: {x: 0.586, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17170,7 +17169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.50751156, g: 0.6850645, b: 0.9056604, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

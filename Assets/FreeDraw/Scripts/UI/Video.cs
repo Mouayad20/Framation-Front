@@ -38,7 +38,7 @@ public class Video : View
                 string ffmpegPath = @"ffmpeg"; // Replace with your FFmpeg executable path
                 ProcessStartInfo startInfo       = new ProcessStartInfo();
                 startInfo.FileName               = ffmpegPath;
-                startInfo.Arguments = $"-y -framerate {frameRate} -i .\\Assets\\images\\%d.png -s {quality} \"{selectedPath[0]}\\framation.mp4\"";
+                startInfo.Arguments = $"-y -framerate {frameRate} -i \"{Home.imagesPath}\\%d.png\" -s {quality} \"{selectedPath[0]}\\framation.mp4\"";
                 startInfo.UseShellExecute        = false;
                 startInfo.CreateNoWindow         = true;
                 startInfo.RedirectStandardOutput = true;
