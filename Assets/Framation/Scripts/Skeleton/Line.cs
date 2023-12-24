@@ -6,12 +6,12 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 [Serializable]
-public class LineController : MonoBehaviour
+public class Line : MonoBehaviour
 {
     public int id;
     public LineRenderer lr;
-    public DotController start;
-    public DotController end;
+    public Dot start;
+    public Dot end;
     public Vector3 previousPosition;
     public Vector3 positionChange;
     public Vector3 position;
@@ -44,13 +44,13 @@ public class LineController : MonoBehaviour
         previousDistance  = 1;
     }
 
-    public void SetStart(DotController dot, int dotId){
+    public void SetStart(Dot dot, int dotId){
         start = dot;
         start.id = dotId;
         lr.positionCount++;
     }
 
-    public void SetEnd(DotController dot, int dotId){
+    public void SetEnd(Dot dot, int dotId){
         end = dot;
         end.id = dotId;
         lr.positionCount++;
@@ -102,8 +102,8 @@ public class LineController : MonoBehaviour
         previousDistanceY  = currentDistanceY;
     }
 
-    public LineController Clone(){
-        LineController line = new LineController();
+    public Line Clone(){
+        Line line = new Line();
         line.id = this.id ;
         line.prevX = this.prevX ;
         line.prevY = this.prevY ;

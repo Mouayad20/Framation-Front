@@ -26,9 +26,13 @@ public class Home: View
     public static string sketchVideoPath;
     public static string imagesPath;
     public static string renderTexturePath;
+    public static int width;
+    public static int height;
 
     public override void Initialize()
     { 
+        width  = 1300;
+        height = 925;
         string basePath  = Application.dataPath + "\\Resources";
         string fileName  = "whiteBoard.png";
         string videoName = "sketch.mp4";
@@ -53,8 +57,6 @@ public class Home: View
                 CreateFile(renderTexturePath);
             }
             if (!File.Exists(whiteBoardPath)){
-                int width = 1300;
-                int height = 925;
 
                 Texture2D whiteImage = new Texture2D(width, height);
 

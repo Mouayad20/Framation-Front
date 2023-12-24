@@ -197,7 +197,7 @@ public class Drawing : View
                 Cv2.Resize(
                     OpenCvSharp.Unity.TextureToMat(texture),
                     outputTexture,
-                    new Size(1300, 925)
+                    new Size(Home.width, Home.height)
                 );
                 Drawable.drawable.drawable_texture.LoadImage(OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
                 Drawable.drawable.drawable_texture.Apply();

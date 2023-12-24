@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 public class Skeleton {
 
-    public List<LineController> lines;
+    public List<Line> lines;
 
     public Skeleton(){
-        this.lines = new List<LineController>();
+        this.lines = new List<Line>();
     }
 }

@@ -20,9 +20,9 @@ public class VideoPlayerController : MonoBehaviour
         videoPlayer.url = Home.sketchVideoPath;
 
         videoPlayer.renderMode = VideoRenderMode.RenderTexture;
-        Texture2D texture = new Texture2D(1300, 925);
+        Texture2D texture = new Texture2D(Home.width, Home.height);
         texture.LoadImage(File.ReadAllBytes(Home.renderTexturePath));
-        Graphics.CopyTexture(texture, renderTexture);
+        Graphics.CopyTexture(texture, renderTexture); //ERROR
         videoPlayer.targetTexture = renderTexture;
         videoPlayer.aspectRatio = VideoAspectRatio.FitInside;
         videoPlayer.targetMaterialRenderer = videoScreen.GetComponent<Renderer>();

@@ -10,7 +10,7 @@ public class SaveNumFrame : MonoBehaviour
 
     public void SaveData(){
         if(input.text == ""){
-            input.text = "3";  // #Show Error message
+            input.text = "24";
         }
         PenTool.frameNum = int.Parse(input.text);
     }

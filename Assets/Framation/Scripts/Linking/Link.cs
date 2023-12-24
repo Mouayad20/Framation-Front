@@ -20,7 +20,7 @@ public class Link : MonoBehaviour {
         pointTrianglesCommon = new Dictionary<(float, float, float), List<int>>();
     }
 
-    public Dictionary<LineController, List<Triangle>> Linking(){
+    public Dictionary<Line, List<Triangle>> Linking(){
 
         Skeleton skeleton = skeletons[0];
 
@@ -95,7 +95,7 @@ public class Link : MonoBehaviour {
         Dictionary<(int, int), int> distance = new Dictionary<(int, int), int>();
 
         // We will fill this distance with -1 (-1 means that this value is not calculated yet)
-        foreach (LineController line in skeleton.lines)
+        foreach (Line line in skeleton.lines)
         {
             foreach (Triangle triangle in triangles)
             {
@@ -138,7 +138,7 @@ public class Link : MonoBehaviour {
 
         // Our BFS will be multi-source (that means we will start with a queue that has many nodes)
         // When we start this BFS, we will fill the queue with the direct triangles with 0 distance
-        foreach (LineController line in skeleton.lines)
+        foreach (Line line in skeleton.lines)
         {   
             // Queue<KeyValuePair<1, 2>> : 1 - triangle id
             //                             2 - distance between triangle and current processing line
@@ -186,14 +186,14 @@ public class Link : MonoBehaviour {
         // In this example, we will add the triangle to the first 3 lines with a distance of 2
 
         // Define a dictionary that gives us all the triangles for a line
-        Dictionary<LineController, List<Triangle>> lineTriangles = new Dictionary<LineController, List<Triangle>>();
+        Dictionary<Line, List<Triangle>> lineTriangles = new Dictionary<Line, List<Triangle>>();
 
         foreach (Triangle triangle in triangles)
         {
             int minimumDistance = int.MaxValue;
 
             // Calculate the minimum distance to compare with other distances
-            foreach (LineController line in skeleton.lines)
+            foreach (Line line in skeleton.lines)
             {
                 minimumDistance = Math.Min(minimumDistance, distance[(line.id, triangle.id)]);
             }
@@ -201,7 +201,7 @@ public class Link : MonoBehaviour {
             // Compare the distances with the minimumDistance
             // If the distance - minimumDistance <= epsilon the  for this line,
             // then we will consider it as connected to this triangle
-            foreach (LineController line in skeleton.lines)
+            foreach (Line line in skeleton.lines)
             {
                 if (distance[(line.id, triangle.id)] - minimumDistance <= epsilon)
                 {
@@ -220,7 +220,7 @@ public class Link : MonoBehaviour {
 
         /// ---------- here you have to fill the output from the lineTriangles dictionary --------- ///
 
-        foreach (KeyValuePair<LineController, List<Triangle>> kvp in lineTriangles){
+        foreach (KeyValuePair<Line, List<Triangle>> kvp in lineTriangles){
             Color coco = new Color(Random.value, Random.value, Random.value, 1.0f);
             foreach(Triangle triangle in kvp.Value){
                 triangle.color = coco;

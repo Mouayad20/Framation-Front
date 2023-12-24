@@ -825,7 +825,7 @@ RectTransform:
   - {fileID: 1012110076}
   - {fileID: 1077938164}
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1833,7 +1833,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1092533231}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &239788607
 SpriteRenderer:
@@ -2058,7 +2058,7 @@ GameObject:
   - component: {fileID: 298826503}
   - component: {fileID: 298826502}
   m_Layer: 5
-  m_Name: Video 1 Panel
+  m_Name: Put Skeleton Video
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3289,7 +3289,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1092533231}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &553896462
 GameObject:
@@ -3590,7 +3590,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1092533231}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &572849316
 SpriteRenderer:
@@ -5083,7 +5083,7 @@ GameObject:
   - component: {fileID: 720384034}
   - component: {fileID: 720384033}
   m_Layer: 0
-  m_Name: Video Player (1)
+  m_Name: Move Skeleton Video
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5182,7 +5182,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1092533231}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &730887749
 SpriteRenderer:
@@ -5417,7 +5417,7 @@ GameObject:
   - component: {fileID: 741602122}
   - component: {fileID: 741602123}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: video
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6035,7 +6035,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &800677343
 SpriteRenderer:
@@ -6619,7 +6619,7 @@ GameObject:
   - component: {fileID: 884547050}
   - component: {fileID: 884547049}
   m_Layer: 5
-  m_Name: Video 2 Panel
+  m_Name: Move Skeleton Video
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8230,7 +8230,7 @@ GameObject:
   - component: {fileID: 1021051008}
   - component: {fileID: 1021051007}
   m_Layer: 0
-  m_Name: Video Player
+  m_Name: Put Skeleton Video
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8329,12 +8329,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1718531695}
-  - {fileID: 1920597227}
-  - {fileID: 1080262149}
   - {fileID: 149557303}
   - {fileID: 800677342}
   - {fileID: 1035431974}
   - {fileID: 1752734400}
+  - {fileID: 1920597227}
+  - {fileID: 1080262149}
   m_Father: {fileID: 606402856}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8386,7 +8386,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1035431975
 SpriteRenderer:
@@ -9010,7 +9010,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 2
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &1080262150
 MeshCollider:
@@ -9672,10 +9672,10 @@ RectTransform:
   - {fileID: 1169461660}
   - {fileID: 1733362934}
   - {fileID: 176590003}
-  - {fileID: 509989697}
   - {fileID: 572849315}
   - {fileID: 239788606}
   - {fileID: 730887748}
+  - {fileID: 509989697}
   - {fileID: 554728012}
   - {fileID: 66276404}
   - {fileID: 183767938}
@@ -10318,7 +10318,7 @@ GameObject:
   - component: {fileID: 1169461669}
   - component: {fileID: 1169461671}
   m_Layer: 5
-  m_Name: Draw
+  m_Name: Draw Sketch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13735,7 +13735,7 @@ GameObject:
   - component: {fileID: 1609124254}
   - component: {fileID: 1609124253}
   m_Layer: 5
-  m_Name: ReadWriteEnabledImageToDrawOn
+  m_Name: Drawing Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13879,7 +13879,7 @@ GameObject:
   - component: {fileID: 1612993330}
   - component: {fileID: 1612993329}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ..Framation..
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15365,7 +15365,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16434,7 +16434,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1025927162}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1920597228
 MonoBehaviour:

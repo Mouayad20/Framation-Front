@@ -59,7 +59,7 @@ namespace Framation
             public List<Vector2> points = new List<Vector2>() ;
             public List<Triangle> triangles ;
             public List<Vector2> uv ;
-            public Dictionary<LineController, List<Triangle>> output ;
+            public Dictionary<Line, List<Triangle>> output ;
             public Material materialToModify ;
             public Mesh globalMesh;
             public Link link ;
@@ -250,11 +250,6 @@ namespace Framation
                 }
                 changeTexture    = false;
 
-            }
-
-             if (Input.GetKeyDown(KeyCode.D))
-            {
-                // Do something when "D" key is pressed
             }
 
         }

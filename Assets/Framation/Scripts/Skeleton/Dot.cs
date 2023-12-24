@@ -5,13 +5,13 @@ using System;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DotController : MonoBehaviour , IDragHandler, IPointerClickHandler {
+public class Dot : MonoBehaviour , IDragHandler, IPointerClickHandler {
 
     public int id;
-    public Action<DotController> onDragEvent;
-    public Action<DotController> onDragMoveEvent;
-    public Action<DotController> OnRightClickEvent;
-    public Action<DotController> OnLeftClickEvent;
+    public Action<Dot> onDragEvent;
+    public Action<Dot> onDragMoveEvent;
+    public Action<Dot> OnRightClickEvent;
+    public Action<Dot> OnLeftClickEvent;
 
     public void OnDrag(PointerEventData eventData){
         if (eventData.pointerId == -1){

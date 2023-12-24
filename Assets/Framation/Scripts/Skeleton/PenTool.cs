@@ -32,9 +32,9 @@ public class PenTool : MonoBehaviour
     private Skeleton basicSkeleton;
     private Skeleton copySkeleton ;
     private Skeleton stableSkeleton ;
-    private DotController prevDot ;
-    private DotController maxDot  ;
-    private DotController dot     ;
+    private Dot prevDot ;
+    private Dot maxDot  ;
+    private Dot dot     ;
     private Color color;
     private float k     ; 
     private float prevX ;
@@ -51,30 +51,14 @@ public class PenTool : MonoBehaviour
     private int   dotId;
     public static int frameNum;
     public static int frameId;
-    private int   fffff;
     private float step;
-    private List<Vector3> vectors;
 
     private void Start()  {
         penCanvas.OnPenCanvasLeftClickEvent += AddDot;
-        skeletons       = new List <Skeleton>();
-        maxDot          = new DotController();
-        basicSkeleton   = new Skeleton();
-        counter         = 0 ;
-        dotId           = 0 ;
-        lineCounter     = 0 ;
-        moveSkeleton2   = true;
-        doCopySkeleton1 = true;
-        doLinking       = false;
-        k  = 0.0f ;
-        dX = 0 ; 
-        dY = 0 ; 
-        move     = false;
-        penTool  = this;
+        InitializeVars();
         frameNum = 24 ; 
         frameId  = 0 ; 
         step    = 0 ; 
-        vectors = new List<Vector3>(); 
     }
 
     private void Update() {
@@ -107,7 +91,7 @@ public class PenTool : MonoBehaviour
                 stableSkeleton = CloneSkeleton(skeleton1,out maxDot,true);
             }
             
-            Dictionary<UpdateAll, List<LineController>> pointLines = new Dictionary<UpdateAll, List<LineController>>();
+            Dictionary<UpdateAll, List<Line>> pointLines = new Dictionary<UpdateAll, List<Line>>();
 
             for(int i = 0 ; i< skeleton1.lines.Count ; i++) {
                 
@@ -130,15 +114,15 @@ public class PenTool : MonoBehaviour
 
                 foreach(UpdateAll updateAll in uniqueUpdateAll){
                     if(!pointLines.ContainsKey(updateAll))
-                        pointLines[updateAll] = new List<LineController>();
+                        pointLines[updateAll] = new List<Line>();
                     pointLines[updateAll].Add(skeleton1.lines[i]);
                 }
             
             }  
-            foreach(KeyValuePair<UpdateAll, List<LineController>> kvp in pointLines){
+            foreach(KeyValuePair<UpdateAll, List<Line>> kvp in pointLines){
                 UpdateAll result = new UpdateAll(99999999,new Vector3(0, 0, 0));
 
-                foreach(LineController line in kvp.Value){
+                foreach(Line line in kvp.Value){
                     Vector3 localCenter = new Vector3(
                         (line.start.transform.position.x + line.end.transform.position.x) / 2 ,
                         (line.start.transform.position.y + line.end.transform.position.y) / 2 ,
@@ -215,33 +199,36 @@ public class PenTool : MonoBehaviour
         }
         if(Drawing.vanishMode){
             Drawable.drawable.isDrawing = true;   
-            skeletons     = new List <Skeleton>();
-            maxDot        = new DotController();
-            basicSkeleton = new Skeleton();
-            counter       = 0 ;
-            dotId         = 0 ;
-            lineCounter   = 0 ;
-            k = 0.0f ;
-            dX = 0 ; 
-            dY = 0 ; 
-            moveSkeleton2 = true;
-            doCopySkeleton1 = true;
-            doLinking     = false;
-            move     = false;
-            penTool  = this;
-            vectors = new List<Vector3>();
+            InitializeVars();
         }
         
     }
 
+    private void InitializeVars(){
+        skeletons     = new List <Skeleton>();
+        maxDot        = new Dot();
+        basicSkeleton = new Skeleton();
+        counter       = 0 ;
+        dotId         = 0 ;
+        lineCounter   = 0 ;
+        k = 0.0f ;
+        dX = 0 ; 
+        dY = 0 ; 
+        moveSkeleton2 = true;
+        doCopySkeleton1 = true;
+        doLinking     = false;
+        move     = false;
+        penTool  = this;
+    }
 
-    private Skeleton CloneSkeleton(Skeleton skeleton, out DotController maxDot, bool hideSkeleton){
-        Dictionary<int, DotController> dotsDictionary = new Dictionary<int, DotController>();
+
+    private Skeleton CloneSkeleton(Skeleton skeleton, out Dot maxDot, bool hideSkeleton){
+        Dictionary<int, Dot> dotsDictionary = new Dictionary<int, Dot>();
         Skeleton copySkeleton = new Skeleton();
-        maxDot = Instantiate(dotPrefab , new Vector3(0,-99999999999,0), Quaternion.identity, dotParent).GetComponent<DotController>();
-        foreach(LineController line in skeleton.lines){
+        maxDot = Instantiate(dotPrefab , new Vector3(0,-99999999999,0), Quaternion.identity, dotParent).GetComponent<Dot>();
+        foreach(Line line in skeleton.lines){
             if(!dotsDictionary.ContainsKey(line.start.id)){
-                DotController dot = Instantiate(dotPrefab , line.start.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
+                Dot dot = Instantiate(dotPrefab , line.start.transform.position, Quaternion.identity, dotParent).GetComponent<Dot>();
                 dot.id = line.start.id;
                 dot.onDragEvent = line.start.onDragEvent;
                 dot.OnRightClickEvent  = line.start.OnRightClickEvent;
@@ -249,7 +236,7 @@ public class PenTool : MonoBehaviour
                 dotsDictionary[dot.id] = dot;
             }
             if(!dotsDictionary.ContainsKey(line.end.id)){
-                DotController dot = Instantiate(dotPrefab , line.end.transform.position, Quaternion.identity, dotParent).GetComponent<DotController>();
+                Dot dot = Instantiate(dotPrefab , line.end.transform.position, Quaternion.identity, dotParent).GetComponent<Dot>();
                 dot.id = line.end.id;
                 dot.onDragEvent = line.end.onDragEvent;
                 dot.OnRightClickEvent  = line.end.OnRightClickEvent;
@@ -257,7 +244,7 @@ public class PenTool : MonoBehaviour
                 dotsDictionary[dot.id] = dot;
             }
         }
-        foreach (LineController line in basicSkeleton.lines){
+        foreach (Line line in basicSkeleton.lines){
             if ( ( line.start.transform.position.y >  maxDot.transform.position.y) || ( line.end.transform.position.y > maxDot.transform.position.y ) ) {
                 if(line.start.transform.position.y >= line.end.transform.position.y){
                     maxDot = dotsDictionary[line.start.id];
@@ -269,8 +256,8 @@ public class PenTool : MonoBehaviour
             line.start.GetComponent<Image>().enabled = false;
             line.end.GetComponent<Image>().enabled = false;
 
-            LineController cloneLine = line.Clone(); 
-            cloneLine = Instantiate (lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<LineController>(); ; 
+            Line cloneLine = line.Clone(); 
+            cloneLine = Instantiate (lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); ; 
             cloneLine.id = line.id  ;  
 
             cloneLine.start    = dotsDictionary[line.start.id];
@@ -318,26 +305,10 @@ public class PenTool : MonoBehaviour
         return isContains;
     }
 
-    private List<Vector3> GenerateInBetweenVectors(Vector3 start, Vector3 end, int count)
-    {
-        List<Vector3> lerpValues = new List<Vector3>();
-
-        float step = 1f / (count + 1); // Calculate the step size between each lerp value
-
-        for (int i = 1; i <= count; i++)
-        {
-            float t = step * i;
-            Vector3 lerpValue = Vector3.Lerp(start, end, t);
-            lerpValues.Add(lerpValue);
-        }
-
-        return lerpValues;
-    }
-
     private void AddDot() {
         if (!Drawable.drawable.isDrawing){
             if(counter == 0 ) {
-                DotController dot = Instantiate(dotPrefab , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<DotController>();
+                Dot dot = Instantiate(dotPrefab , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<Dot>();
                 dot.onDragEvent += MoveDot;
                 dot.OnLeftClickEvent += SelectDot;
                 dot.OnRightClickEvent += UnSelectDot;
@@ -345,12 +316,12 @@ public class PenTool : MonoBehaviour
                 counter = counter + 1;
             } 
             else if (selectDot && prevDot != null ) {
-                DotController newDot = Instantiate(dotPrefab , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<DotController>();
+                Dot newDot = Instantiate(dotPrefab , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<Dot>();
                 newDot.onDragEvent += MoveDot;
                 newDot.OnLeftClickEvent += SelectDot;
                 newDot.OnRightClickEvent += UnSelectDot;
 
-                LineController line =  Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<LineController>(); 
+                Line line =  Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
                 line.id = lineCounter  ;  
                 line.SetStart(prevDot,prevDot.id) ;
                 dotId = dotId + 1 ;
@@ -364,12 +335,12 @@ public class PenTool : MonoBehaviour
                 selectDot = false;
             }
             else if ( counter > 0 && prevDot != null ) {
-                DotController newDot = Instantiate(dotPrefab  , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<DotController>();
+                Dot newDot = Instantiate(dotPrefab  , GetMousePosition(), Quaternion.identity, dotParent).GetComponent<Dot>();
                 newDot.onDragEvent += MoveDot;
                 newDot.OnLeftClickEvent += SelectDot;
                 newDot.OnRightClickEvent += UnSelectDot;
 
-                LineController line  = Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<LineController>(); 
+                Line line  = Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
                 line.id = lineCounter   ;
                 line.SetStart(prevDot,dotId);
                 dotId = dotId + 1 ;
@@ -387,7 +358,7 @@ public class PenTool : MonoBehaviour
         }
     }
 
-    private void MoveDot(DotController dot) {
+    private void MoveDot(Dot dot) {
         Vector3 mousePos = GetMousePosition();
         if (isInside(mousePos)){ 
             dot.transform.position = dot.transform.position; 
@@ -396,7 +367,7 @@ public class PenTool : MonoBehaviour
         }
     }
 
-    private void MoveMaxDot(DotController dot) {
+    private void MoveMaxDot(Dot dot) {
         Vector3 mousePos = GetMousePosition();
         if (isInside(mousePos)){ 
             dot.transform.position = dot.transform.position; 
@@ -431,19 +402,19 @@ public class PenTool : MonoBehaviour
             return false;
     }
 
-    private void SelectDot(DotController selectedDot) {
+    private void SelectDot(Dot selectedDot) {
         prevDot   = selectedDot;
         dot       = selectedDot;
         selectDot = true;
     }
 
-    private void UnSelectDot(DotController selectedDot) {
+    private void UnSelectDot(Dot selectedDot) {
         dot  = null;
         selectDot = false;
     }
 
-    private void RemoveDot(DotController dotRemove) {
-        LineController line = CheckIfLeaf(dotRemove); 
+    private void RemoveDot(Dot dotRemove) {
+        Line line = CheckIfLeaf(dotRemove); 
         if ( line != null ){    
             print("it is a leaf");
             Destroy(line.gameObject);
@@ -459,10 +430,10 @@ public class PenTool : MonoBehaviour
         }
     }
 
-    private LineController CheckIfLeaf(DotController  dot) {
+    private Line CheckIfLeaf(Dot  dot) {
         int freq = 0 ; 
-        LineController line = null ;
-        foreach(LineController line2 in  basicSkeleton.lines) {
+        Line line = null ;
+        foreach(Line line2 in  basicSkeleton.lines) {
             if(line2.start.id == dot.id || line2.end.id == dot.id){
                 line  = line2;
                 freq++;
@@ -502,7 +473,7 @@ public class PenTool : MonoBehaviour
         screenshotTexture.Apply();
 
         Mat outputTexture = new Mat();
-        Cv2.Resize(OpenCvSharp.Unity.TextureToMat(screenshotTexture), outputTexture, new Size(1300, 925));
+        Cv2.Resize(OpenCvSharp.Unity.TextureToMat(screenshotTexture), outputTexture, new Size(Home.width, Home.height));
         System.IO.File.WriteAllBytes(Home.imagesPath+"\\"+ filename, OpenCvSharp.Unity.MatToTexture(outputTexture).EncodeToPNG());
     }
 }
