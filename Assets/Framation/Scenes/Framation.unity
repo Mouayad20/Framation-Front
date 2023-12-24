@@ -3679,7 +3679,7 @@ MonoBehaviour:
   penCanvas: {fileID: 1112905070}
   dotPrefab: {fileID: 653323792597365088, guid: c524da02ea7f18047bdcbaaebc1a78af, type: 3}
   dotParent: {fileID: 328031776}
-  lineprefab: {fileID: 3554804613065760184, guid: 9591db889db1de04da3232248863ced5, type: 3}
+  linePrefab: {fileID: 3554804613065760184, guid: 9591db889db1de04da3232248863ced5, type: 3}
   lineParent: {fileID: 0}
   doCopySkeleton1: 0
 --- !u!114 &574229329

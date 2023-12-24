@@ -70,84 +70,26 @@ namespace Framation
             public GameObject go ;
 
 
-//////////////////////////////////////////////////////////////////////////////
-// BRUSH TYPES. Implement your own here
-
-        // When you want to make your own type of brush effects,
-        // Copy, paste and rename this function.
-        // Go through each step
-        public void BrushTemplate(Vector2 world_position)
+        void Awake()
         {
-            // 1. Change world position to pixel coordinates
-            Vector2 pixel_pos = WorldToPixelCoordinates(world_position);
 
-            // 2. Make sure our variable for pixel array is updated in this frame
-            cur_colors = drawable_texture.GetPixels32();
-
-            ////////////////////////////////////////////////////////////////
-            // FILL IN CODE BELOW HERE
-
-            // Do we care about the user left clicking and dragging?
-            // If you don't, simply set the below if statement to be:
-            //if (true)
-
-            // If you do care about dragging, use the below if/else structure
-            if (previous_drag_position == Vector2.zero)
-            {
-                // THIS IS THE FIRST CLICK
-                // FILL IN WHATEVER YOU WANT TO DO HERE
-                // Maybe mark multiple pixels to colour?
-                MarkPixelsToColour(pixel_pos, Pen_Width, Pen_Colour);
-            }
-            else
-            {
-                // THE USER IS DRAGGING
-                // Should we do stuff between the previous mouse position and the current one?
-                ColourBetween(previous_drag_position, pixel_pos, Pen_Width, Pen_Colour);
-            }
-            ////////////////////////////////////////////////////////////////
-
-            // 3. Actually apply the changes we marked earlier
-            // Done here to be more efficient
-            ApplyMarkedPixelChanges();
-            
-            // 4. If dragging, update where we were previously
-            previous_drag_position = pixel_pos;
-        }
-
-        // Default brush type. Has width and colour.
-        // Pass in a point in WORLD coordinates
-        // Changes the surrounding pixels of the world_point to the static pen_colour
-        public void PenBrush(Vector2 world_point)
-        {
-            Vector2 pixel_pos = WorldToPixelCoordinates(world_point);
-
-            cur_colors = drawable_texture.GetPixels32();
-
-            if (previous_drag_position == Vector2.zero)
-            {
-                // If this is the first time we've ever dragged on this image, simply colour the pixels at our mouse position
-                MarkPixelsToColour(pixel_pos, Pen_Width, Pen_Colour);
-            }
-            else
-            {
-                // Colour in a line from where we were on the last update call
-                ColourBetween(previous_drag_position, pixel_pos, Pen_Width, Pen_Colour);
-            }
-            ApplyMarkedPixelChanges();
-
-            //Debug.Log("Dimensions: " + pixelWidth + "," + pixelHeight + ". Units to pixels: " + unitsToPixels + ". Pixel pos: " + pixel_pos);
-            previous_drag_position = pixel_pos;
-        }
-
-        // Helper method used by UI to set what brush the user wants
-        // Create a new one for any new brushes you implement
-        public void SetPenBrush()
-        {
-            // PenBrush is the NAME of the method we want to set as our current brush
+            cam = Camera.main;
+            drawable = this;
+            // DEFAULT BRUSH SET HERE
             current_brush = PenBrush;
+
+            drawable_sprite = this.GetComponent<SpriteRenderer>().sprite;
+            drawable_texture = drawable_sprite.texture;
+
+            // Initialize clean pixels to use
+            clean_colours_array = new Color[(int)drawable_sprite.rect.width * (int)drawable_sprite.rect.height];
+            for (int x = 0; x < clean_colours_array.Length; x++)
+                clean_colours_array[x] = Reset_Colour;
+
+            // Should we reset our canvas image when we hit play in the editor?
+            if (Reset_Canvas_On_Play)
+                ResetCanvas();
         }
-//////////////////////////////////////////////////////////////////////////////
 
         // This is where the magic happens.
         // Detects when user is left clicking, which then call the appropriate function
@@ -254,7 +196,6 @@ namespace Framation
 
         }
 
-
         public void ConvertSpriteToImage()
         {
             if (drawable_sprite != null)
@@ -280,8 +221,8 @@ namespace Framation
 
                     //    BEGIN find contours from texture 
 
-                        float width  = 13f ;
-                        float height = 9.25f;
+                        float width  = Home.width /100;
+                        float height = Home.height/100;
                         float center_x = width   / 2 ; 
                         float center_y = height  / 2 ;
 
@@ -389,6 +330,84 @@ namespace Framation
                 print("drawable_sprite is not assigned!");
             }
         }
+        //////////////////////////////////////////////////////////////////////////////
+        // BRUSH TYPES. Implement your own here
+
+        // When you want to make your own type of brush effects,
+        // Copy, paste and rename this function.
+        // Go through each step
+        public void BrushTemplate(Vector2 world_position)
+        {
+            // 1. Change world position to pixel coordinates
+            Vector2 pixel_pos = WorldToPixelCoordinates(world_position);
+
+            // 2. Make sure our variable for pixel array is updated in this frame
+            cur_colors = drawable_texture.GetPixels32();
+
+            ////////////////////////////////////////////////////////////////
+            // FILL IN CODE BELOW HERE
+
+            // Do we care about the user left clicking and dragging?
+            // If you don't, simply set the below if statement to be:
+            //if (true)
+
+            // If you do care about dragging, use the below if/else structure
+            if (previous_drag_position == Vector2.zero)
+            {
+                // THIS IS THE FIRST CLICK
+                // FILL IN WHATEVER YOU WANT TO DO HERE
+                // Maybe mark multiple pixels to colour?
+                MarkPixelsToColour(pixel_pos, Pen_Width, Pen_Colour);
+            }
+            else
+            {
+                // THE USER IS DRAGGING
+                // Should we do stuff between the previous mouse position and the current one?
+                ColourBetween(previous_drag_position, pixel_pos, Pen_Width, Pen_Colour);
+            }
+            ////////////////////////////////////////////////////////////////
+
+            // 3. Actually apply the changes we marked earlier
+            // Done here to be more efficient
+            ApplyMarkedPixelChanges();
+            
+            // 4. If dragging, update where we were previously
+            previous_drag_position = pixel_pos;
+        }
+
+        // Default brush type. Has width and colour.
+        // Pass in a point in WORLD coordinates
+        // Changes the surrounding pixels of the world_point to the static pen_colour
+        public void PenBrush(Vector2 world_point)
+        {
+            Vector2 pixel_pos = WorldToPixelCoordinates(world_point);
+
+            cur_colors = drawable_texture.GetPixels32();
+
+            if (previous_drag_position == Vector2.zero)
+            {
+                // If this is the first time we've ever dragged on this image, simply colour the pixels at our mouse position
+                MarkPixelsToColour(pixel_pos, Pen_Width, Pen_Colour);
+            }
+            else
+            {
+                // Colour in a line from where we were on the last update call
+                ColourBetween(previous_drag_position, pixel_pos, Pen_Width, Pen_Colour);
+            }
+            ApplyMarkedPixelChanges();
+
+            //Debug.Log("Dimensions: " + pixelWidth + "," + pixelHeight + ". Units to pixels: " + unitsToPixels + ". Pixel pos: " + pixel_pos);
+            previous_drag_position = pixel_pos;
+        }
+
+        // Helper method used by UI to set what brush the user wants
+        // Create a new one for any new brushes you implement
+        public void SetPenBrush()
+        {
+            // PenBrush is the NAME of the method we want to set as our current brush
+            current_brush = PenBrush;
+        }
+        //////////////////////////////////////////////////////////////////////////////
 
         // Set the colour of pixels in a straight line from start_point all the way to end_point, to ensure everything inbetween is coloured
         public void ColourBetween(Vector2 start_point, Vector2 end_point, int width, Color color)
@@ -497,25 +516,5 @@ namespace Framation
             drawable_texture = drawable_sprite.texture;
         }
 
-        void Awake()
-        {
-
-            cam = Camera.main;
-            drawable = this;
-            // DEFAULT BRUSH SET HERE
-            current_brush = PenBrush;
-
-            drawable_sprite = this.GetComponent<SpriteRenderer>().sprite;
-            drawable_texture = drawable_sprite.texture;
-
-            // Initialize clean pixels to use
-            clean_colours_array = new Color[(int)drawable_sprite.rect.width * (int)drawable_sprite.rect.height];
-            for (int x = 0; x < clean_colours_array.Length; x++)
-                clean_colours_array[x] = Reset_Colour;
-
-            // Should we reset our canvas image when we hit play in the editor?
-            if (Reset_Canvas_On_Play)
-                ResetCanvas();
-        }
     }
 }

@@ -21,7 +21,7 @@ public class PenTool : MonoBehaviour
     [SerializeField] Transform dotParent;
     
     [Header("Lines")]
-    [SerializeField] GameObject lineprefab;
+    [SerializeField] GameObject linePrefab;
     [SerializeField] Transform  lineParent;
 
     public static PenTool penTool;
@@ -45,10 +45,10 @@ public class PenTool : MonoBehaviour
     private bool  moveSkeleton2 ;
     private bool  move ;
     public  bool  doCopySkeleton1 ;
-    public static bool  doLinking ;
     private int   lineCounter ;
     private int   counter;
     private int   dotId;
+    public static bool  doLinking ;
     public static int frameNum;
     public static int frameId;
     private float step;
@@ -257,7 +257,7 @@ public class PenTool : MonoBehaviour
             line.end.GetComponent<Image>().enabled = false;
 
             Line cloneLine = line.Clone(); 
-            cloneLine = Instantiate (lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); ; 
+            cloneLine = Instantiate (linePrefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); ; 
             cloneLine.id = line.id  ;  
 
             cloneLine.start    = dotsDictionary[line.start.id];
@@ -286,25 +286,6 @@ public class PenTool : MonoBehaviour
         return copySkeleton;
     }
 
-    private bool IsContains(Vector3 vector,List<Vector3> vs){
-        bool isContains = false; 
-        foreach(Vector3 v in vs){
-            if(
-                (  (vector.x == v.x) ||
-                    (( vector.x >= ( v.x - 0.01 ) ) &&
-                     ( vector.x <= ( v.x + 0.01 ) ))
-                ) && 
-                (  (vector.y == v.y) ||
-                    ( vector.y >= ( v.y - 0.01 ) ) &&
-                    ( vector.y <= ( v.y + 0.01 ) )  
-                )
-            ){
-                isContains = true;
-            }
-        }
-        return isContains;
-    }
-
     private void AddDot() {
         if (!Drawable.drawable.isDrawing){
             if(counter == 0 ) {
@@ -321,7 +302,7 @@ public class PenTool : MonoBehaviour
                 newDot.OnLeftClickEvent += SelectDot;
                 newDot.OnRightClickEvent += UnSelectDot;
 
-                Line line =  Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
+                Line line =  Instantiate(linePrefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
                 line.id = lineCounter  ;  
                 line.SetStart(prevDot,prevDot.id) ;
                 dotId = dotId + 1 ;
@@ -340,7 +321,7 @@ public class PenTool : MonoBehaviour
                 newDot.OnLeftClickEvent += SelectDot;
                 newDot.OnRightClickEvent += UnSelectDot;
 
-                Line line  = Instantiate(lineprefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
+                Line line  = Instantiate(linePrefab , Vector3.zero , Quaternion.identity , lineParent).GetComponent<Line>(); 
                 line.id = lineCounter   ;
                 line.SetStart(prevDot,dotId);
                 dotId = dotId + 1 ;
